@@ -12,34 +12,51 @@
     tools:context="com.example.chiaraercolani.treasurehunt.StartMenuActivity">
 
     <TextView
+        android:layout_margin="16dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Welcome to Treasure Hunt"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimaryDark"
+        android:text="@string/welcome_message"
         android:layout_gravity= "center"/>
 
-    <Button
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/btn_join"
-        android:text="@string/join"
-        android:layout_gravity= "center"
-        android:onClick="buttonClicked"/>
+        android:orientation="vertical"
+        android:layout_gravity="center">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btn_create"
-        android:text="@string/create"
-        android:layout_gravity= "center"
-        android:onClick="buttonClicked"/>
+        <Button
+            android:layout_margin="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_join"
+            android:text="@string/join"
+            android:layout_gravity= "center"
+            android:onClick="buttonClicked"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btn_settings"
-        android:text="@string/settings"
-        android:layout_gravity= "center"
-        android:onClick="buttonClicked"/>
+        <Button
+            android:layout_margin="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_create"
+            android:text="@string/create"
+            android:layout_gravity= "center"
+            android:onClick="buttonClicked"/>
+
+        <Button
+            android:layout_margin="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_settings"
+            android:text="@string/settings"
+            android:layout_gravity= "center"
+            android:onClick="buttonClicked"/>
+
+    </LinearLayout>
+
+
 
 
 </LinearLayout>
