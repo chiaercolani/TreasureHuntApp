@@ -2,6 +2,8 @@ package com.example.chiaraercolani.treasurehunt;
 
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 
 /**
  * Created by Vincent RICHAUD on 08/11/2016.
