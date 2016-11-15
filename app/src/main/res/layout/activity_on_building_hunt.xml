@@ -10,31 +10,31 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
-    tools:context="com.example.chiaraercolani.treasurehunt.CreateHuntActivity">
+    tools:context="com.example.chiaraercolani.treasurehunt.OnBuildingHuntActivity">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/create_hunt_activity_toolbar"
+        android:id="@+id/on_building_hunt_activity_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        android:title="@string/create_a_step"
-        />
+        android:title="@string/create_a_hunt"/>
 
     <TextView
         android:layout_margin="4dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Steps"
+        android:text="On building hunts"
         android:textSize="16sp"/>
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/steps_list">
+        android:id="@+id/on_building_hunt_list">
 
     </ListView>
+
 
 </LinearLayout>

@@ -21,7 +21,7 @@ public class StartMenuActivity extends AppCompatActivity {
         Intent intent;
         switch(view.getId()){
             case R.id.btn_create:
-                intent = new Intent(this,CreateHuntActivity.class);
+                intent = new Intent(this,OnBuildingHuntActivity.class);
                 startActivityForResult(intent,CREATE_ACTIVITY);
                 break;
             case R.id.btn_join:
