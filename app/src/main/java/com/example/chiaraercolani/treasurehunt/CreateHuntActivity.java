@@ -3,6 +3,8 @@ package com.example.chiaraercolani.treasurehunt;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -12,8 +14,14 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 public class CreateHuntActivity extends AppCompatActivity {
+
+    private final static int PICK_STEP_POSITION_ACTIVITY_REQUEST_CODE = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +49,13 @@ public class CreateHuntActivity extends AppCompatActivity {
             case R.id.create_new_step :
                 DialogFragment dialogFragment = new CreateNewStepDialogFragment();
                 dialogFragment.show(getSupportFragmentManager(), "create new step");
+//                ((Button) dialogFragment.getDialog().findViewById(R.id.pick_step_position_button)).setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        Intent intent = new Intent(CreateHuntActivity.this, PickStepPositionActivity.class);
+//                        startActivityForResult(intent, PICK_STEP_POSITION_ACTIVITY_REQUEST_CODE);
+//                    }
+//                });
                 return true;
 
             default:
@@ -49,14 +64,35 @@ public class CreateHuntActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode){
+            case PICK_STEP_POSITION_ACTIVITY_REQUEST_CODE:
+                //data.getAction()
+        }
+    }
+
     public static class CreateNewStepDialogFragment extends DialogFragment {
 
+        @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             LayoutInflater inflater = getActivity().getLayoutInflater();
 
-            builder.setView(inflater.inflate(R.layout.add_step_dialog, null));
+            View view = inflater.inflate(R.layout.add_step_dialog, null);
+            ((Button)view.findViewById(R.id.pick_step_position_button)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), PickStepPositionActivity.class);
+                    startActivityForResult(intent, PICK_STEP_POSITION_ACTIVITY_REQUEST_CODE);
+                }
+            });
+
+            builder.setView(view);
+
+
 
             builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                 @Override
@@ -73,6 +109,7 @@ public class CreateHuntActivity extends AppCompatActivity {
 
             return builder.create();
         }
+
     }
 
 }

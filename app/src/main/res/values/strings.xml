@@ -33,4 +33,5 @@
     <string name="pref_username_dialogmessage">Pick a username</string>
     <string name="pref_notification_title">Push Notifications</string>
     <string name="pref_notification_summary">Allow push notifications</string>
+    <string name="title_activity_pick_step_position">Map</string>
 </resources>
