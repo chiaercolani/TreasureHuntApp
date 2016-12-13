@@ -46,5 +46,7 @@ public class Hunt {
         return steps.get(index);
     }
 
+    public ArrayList<Step> getSteps(){return  steps;}
+
 
 }

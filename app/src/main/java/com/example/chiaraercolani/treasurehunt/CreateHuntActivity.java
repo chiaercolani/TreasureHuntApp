@@ -22,6 +22,7 @@ import android.widget.Toast;
 public class CreateHuntActivity extends AppCompatActivity {
 
     private final static int PICK_STEP_POSITION_ACTIVITY_REQUEST_CODE = 0;
+    private Hunt onBuildingHunt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +32,10 @@ public class CreateHuntActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.create_hunt_activity_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(getResources().getString(R.string.create_a_hunt)); //TODO put the current hunt name as title
+
+        String huntName = getIntent().getStringExtra(OnBuildingHuntActivity.HUNT_NAME_EXTRA);
+        onBuildingHunt = new Hunt(huntName, System.currentTimeMillis());
+        getSupportActionBar().setTitle(huntName);
 
     }
 
@@ -49,13 +53,6 @@ public class CreateHuntActivity extends AppCompatActivity {
             case R.id.create_new_step :
                 DialogFragment dialogFragment = new CreateNewStepDialogFragment();
                 dialogFragment.show(getSupportFragmentManager(), "create new step");
-//                ((Button) dialogFragment.getDialog().findViewById(R.id.pick_step_position_button)).setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        Intent intent = new Intent(CreateHuntActivity.this, PickStepPositionActivity.class);
-//                        startActivityForResult(intent, PICK_STEP_POSITION_ACTIVITY_REQUEST_CODE);
-//                    }
-//                });
                 return true;
 
             default:
@@ -91,7 +88,6 @@ public class CreateHuntActivity extends AppCompatActivity {
             });
 
             builder.setView(view);
-
 
 
             builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {

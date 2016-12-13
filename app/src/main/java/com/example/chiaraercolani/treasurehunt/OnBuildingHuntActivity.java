@@ -13,10 +13,17 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import java.util.ArrayList;
 
 public class OnBuildingHuntActivity extends AppCompatActivity {
 
     private final static int CREATE_NEW_HUNT_ACTIVITY_REQUEST_CODE = 0;
+    public final static String HUNT_NAME_EXTRA = "huntnameextra";
+
+    ArrayList<Step> steps = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,10 +83,17 @@ public class OnBuildingHuntActivity extends AppCompatActivity {
             builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    //EditText huntNameEditText = (EditText) getView().findViewById(R.id.new_hunt_name);
-                    //String newHuntName = huntNameEditText.getText().toString();
-                    Intent intent = new Intent(getActivity(), CreateHuntActivity.class);
-                    startActivityForResult(intent, CREATE_NEW_HUNT_ACTIVITY_REQUEST_CODE);
+                    Dialog d = (Dialog)dialog;
+                    EditText editText = (EditText) d.findViewById(R.id.new_hunt_name);
+                    String huntName = editText.getText().toString();
+
+                    if(!huntName.equals("") && !huntName.contains(HuntFileWriter.separator)) {
+                        Intent intent = new Intent(getActivity(), CreateHuntActivity.class);
+                        intent.putExtra(HUNT_NAME_EXTRA, huntName);
+                        startActivityForResult(intent, CREATE_NEW_HUNT_ACTIVITY_REQUEST_CODE);
+                    } else {
+                        Toast.makeText(getActivity(), "Enter a valid name", Toast.LENGTH_SHORT).show();
+                    }
 
                 }
             });
