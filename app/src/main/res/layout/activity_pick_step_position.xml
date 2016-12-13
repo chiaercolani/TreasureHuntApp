@@ -27,16 +27,19 @@
         android:orientation="horizontal">
 
         <Button
+            android:id="@+id/pick_step_position_cancel_button"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="Cancel"/>
 
         <Button
+            android:id="@+id/pick_step_position_ok_button"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="OK"/>
+            android:text="OK"
+            android:enabled="false"/>
 
     </LinearLayout>
 
