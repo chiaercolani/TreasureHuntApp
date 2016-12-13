@@ -18,6 +18,8 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -35,6 +37,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class PickStepPositionActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    public static final String EXTRA_LATITUDE = "latitude";
+    public static final String EXTRA_LONGITUDE = "longitude";
+    public static final int RESULT_CODE_STEP_PICKED = 0;
+    public static final int RESULT_CODE_CANCELED = 1;
+
     private GoogleMap mMap;
     private double currentLatitude=0;
     private double currentLongitude=0;
@@ -42,6 +49,8 @@ public class PickStepPositionActivity extends FragmentActivity implements OnMapR
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
     private Marker stepMarker;
+    private Button okButton;
+    private Button cancelButton;
 
     private GoogleMap.OnMapLongClickListener onMapLongClickListener = new GoogleMap.OnMapLongClickListener() {
         @Override
@@ -52,6 +61,7 @@ public class PickStepPositionActivity extends FragmentActivity implements OnMapR
             options.draggable(true);
             mMap.clear();
             stepMarker = mMap.addMarker(options);
+            okButton.setEnabled(true);
         }
     };
 
@@ -101,6 +111,28 @@ public class PickStepPositionActivity extends FragmentActivity implements OnMapR
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        okButton = (Button) findViewById(R.id.pick_step_position_ok_button);
+        cancelButton = (Button) findViewById(R.id.pick_step_position_cancel_button);
+
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.putExtra(EXTRA_LATITUDE, stepMarker.getPosition().latitude);
+                intent.putExtra(EXTRA_LONGITUDE, stepMarker.getPosition().longitude);
+                setResult(RESULT_CODE_STEP_PICKED, intent);
+                finish();
+            }
+        });
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setResult(RESULT_CODE_CANCELED);
+                finish();
+            }
+        });
     }
 
     protected void onStart() {
