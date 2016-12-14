@@ -1,6 +1,7 @@
 package com.example.chiaraercolani.treasurehunt;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -15,12 +16,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CreateHuntActivity extends AppCompatActivity {
 
@@ -42,6 +47,8 @@ public class CreateHuntActivity extends AppCompatActivity {
     private ArrayList<Step> steps;
     private ListView stepsListView;
 
+    private StepArrayAdapter stepArrayAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +64,9 @@ public class CreateHuntActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(huntName);
 
         steps = new ArrayList<>();
+        stepArrayAdapter = new StepArrayAdapter(this, R.layout.steps_list_item, steps);
+        stepsListView = (ListView) findViewById(R.id.steps_list);
+        stepsListView.setAdapter(stepArrayAdapter);
 
     }
 
@@ -125,22 +135,6 @@ public class CreateHuntActivity extends AppCompatActivity {
             });
 
             builder.setView(view);
-
-
-//            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-//                @Override
-//                public void onClick(DialogInterface dialog, int which) {
-//                    //createNewStep(dialog);
-//
-//                }
-//            });
-//            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-//                @Override
-//                public void onClick(DialogInterface dialog, int which) {
-//                    CreateNewStepDialogFragment.this.getDialog().cancel();
-//                }
-//            });
-
             return builder.create();
         }
 
@@ -161,6 +155,7 @@ public class CreateHuntActivity extends AppCompatActivity {
         Step step = new Step(name, latitude, longitude, id, question, goodAnswer, badAnswer1, badAnswer2, badAnswer3);
 
         steps.add(step);
+        stepArrayAdapter.notifyDataSetChanged();
         return true;
     }
 
@@ -177,41 +172,59 @@ public class CreateHuntActivity extends AppCompatActivity {
 
         @Override
         public void afterTextChanged(Editable s) {
-             if(Double.valueOf(latitudeEditText.getText().toString())==0){
+             if(latitudeEditText.getText().toString().equals("") || Double.valueOf(latitudeEditText.getText().toString())==0){
                 latitudeEditText.setError("Invalid");
-                newStepOkButton.setEnabled(false);
-            } else if(Double.valueOf(longitudeEditText.getText().toString())==0){
+             } else {
+                 latitudeEditText.setError(null);
+             }
+            if(longitudeEditText.getText().toString().equals("") || Double.valueOf(longitudeEditText.getText().toString())==0){
                 longitudeEditText.setError("Invalid");
-                newStepOkButton.setEnabled(false);
-            } else if(nameEditText.getText().toString().isEmpty() || nameEditText.getText().toString().contains(HuntFileWriter.separator)){
+            } else {
+                longitudeEditText.setError(null);
+            }
+            if(nameEditText.getText().toString().isEmpty() || nameEditText.getText().toString().contains(HuntFileWriter.separator)){
                 nameEditText.setError("Invalid");
-                newStepOkButton.setEnabled(false);
-            } else if(questionEditText.getText().toString().isEmpty() || questionEditText.getText().toString().contains(HuntFileWriter.separator)){
-                questionEditText.setError("Invalid");
-                newStepOkButton.setEnabled(false);
-            } else if(goodAnswerEditText.getText().toString().isEmpty() || goodAnswerEditText.getText().toString().contains(HuntFileWriter.separator)){
-                goodAnswerEditText.setError("Invalid");
-                newStepOkButton.setEnabled(false);
-            } else if(badAnswer1EditText.getText().toString().isEmpty() || badAnswer1EditText.getText().toString().contains(HuntFileWriter.separator)){
-                badAnswer1EditText.setError("Invalid");
-                newStepOkButton.setEnabled(false);
-            } else if(badAnswer2EditText.getText().toString().contains(HuntFileWriter.separator)){
-                badAnswer2EditText.setError("Invalid");
-                newStepOkButton.setEnabled(false);
-            } else if(badAnswer3EditText.getText().toString().contains(HuntFileWriter.separator)){
-                badAnswer3EditText.setError("Invalid");
-                newStepOkButton.setEnabled(false);
             } else {
                 nameEditText.setError(null);
-                latitudeEditText.setError(null);
-                longitudeEditText.setError(null);
-                questionEditText.setError(null);
-                goodAnswerEditText.setError(null);
-                badAnswer1EditText.setError(null);
-                badAnswer2EditText.setError(null);
-                badAnswer3EditText.setError(null);
-                newStepOkButton.setEnabled(true);
             }
+            if(questionEditText.getText().toString().isEmpty() || questionEditText.getText().toString().contains(HuntFileWriter.separator)){
+                questionEditText.setError("Invalid");
+            } else {
+                questionEditText.setError(null);
+            }
+            if(goodAnswerEditText.getText().toString().isEmpty() || goodAnswerEditText.getText().toString().contains(HuntFileWriter.separator)){
+                goodAnswerEditText.setError("Invalid");
+            } else {
+                goodAnswerEditText.setError(null);
+            }
+            if(badAnswer1EditText.getText().toString().isEmpty() || badAnswer1EditText.getText().toString().contains(HuntFileWriter.separator)){
+                badAnswer1EditText.setError("Invalid");
+            } else {
+                badAnswer1EditText.setError(null);
+            }
+            if(badAnswer2EditText.getText().toString().contains(HuntFileWriter.separator)){
+                badAnswer2EditText.setError("Invalid");
+            } else {
+                badAnswer2EditText.setError(null);
+            }
+            if(badAnswer3EditText.getText().toString().contains(HuntFileWriter.separator)){
+                badAnswer3EditText.setError("Invalid");
+            } else {
+                badAnswer3EditText.setError(null);
+            }
+            if(latitudeEditText.getError()==null
+                    || longitudeEditText.getError()==null
+                    || nameEditText.getError()==null
+                    || questionEditText.getError()==null
+                    || goodAnswerEditText.getError()==null
+                    || badAnswer1EditText.getError()==null
+                    || badAnswer2EditText.getError()==null
+                    || badAnswer3EditText.getError()==null) {
+                newStepOkButton.setEnabled(true);
+            } else {
+                newStepOkButton.setEnabled(false);
+            }
+
         }
     };
 
@@ -252,4 +265,32 @@ public class CreateHuntActivity extends AppCompatActivity {
         badAnswer3EditText.addTextChangedListener(editTextListener);
     }
 
+    private class StepArrayAdapter extends ArrayAdapter {
+
+        private Context context;
+
+        public StepArrayAdapter(Context context, int resource, List<Step> objects) {
+            super(context, resource, objects);
+            this.context = context;
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, View convertView, @NonNull ViewGroup parent){
+            Step step = steps.get(position);
+
+            View v = convertView;
+            if (v==null){
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
+                v = inflater.inflate(R.layout.steps_list_item, null);
+            }
+
+            ((TextView) v.findViewById(R.id.steps_list_item_number)).setText(String.valueOf(position));
+            ((TextView) v.findViewById(R.id.steps_list_item_name)).setText(step.getName());
+            ((TextView) v.findViewById(R.id.steps_list_item_latitude)).setText(step.getLatitude().toString());
+            ((TextView) v.findViewById(R.id.steps_list_item_longitude)).setText(step.getLongitude().toString());
+
+            return v;
+        }
+    };
 }
