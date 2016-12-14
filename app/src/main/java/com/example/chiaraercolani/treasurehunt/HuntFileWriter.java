@@ -44,6 +44,7 @@ public class HuntFileWriter  {
                 fileContent += s.getWrongAnswer1() + separator;
                 fileContent += s.getWrongAnswer2() + separator;
                 fileContent += s.getWrongAnswer3() + separator;
+                fileContent += "\n";
             }
             try {
                 fileWriter.write(fileContent);
