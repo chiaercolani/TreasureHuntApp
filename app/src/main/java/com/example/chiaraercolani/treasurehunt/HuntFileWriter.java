@@ -1,5 +1,10 @@
 package com.example.chiaraercolani.treasurehunt;
 
+import android.content.Context;
+import android.os.Environment;
+import android.widget.Toast;
+
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,24 +19,36 @@ public class HuntFileWriter  {
 
     private FileWriter fileWriter;
     private Hunt huntToSave;
-    private String fileContent;
+    private Context context;
 
 
-    public HuntFileWriter(Hunt huntToSave) {
-        if(huntToSave != null) {
+    public HuntFileWriter(Context context, Hunt huntToSave) {
+        if(huntToSave != null && context!=null) {
             this.huntToSave = huntToSave;
-            String fileName = huntToSave.getName() + "_" + huntToSave.getID() + ".hunt";
-            try {
-                fileWriter = new FileWriter(fileName);
-            } catch (IOException e) {
-                e.printStackTrace();
+            this.context = context;
+        }
+    }
+
+    public void writeOnSD(String filename, String body) {
+        try {
+            File root = new File(Environment.getExternalStorageDirectory(), "Hunts");
+            if (!root.exists()) {
+                root.mkdirs();
             }
+            File file = new File(root, filename);
+            FileWriter writer = new FileWriter(file);
+            writer.append(body);
+            writer.flush();
+            writer.close();
+            Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
     public boolean write(){
         if(fileWriter!=null && huntToSave!=null){
-            fileContent = "";
+            String fileContent = "";
             fileContent += huntToSave.getName() + separator + huntToSave.getID() + "\n";
             ArrayList<Step> steps = huntToSave.getSteps();
             for(Step s : steps){
@@ -46,13 +63,9 @@ public class HuntFileWriter  {
                 fileContent += s.getWrongAnswer3() + separator;
                 fileContent += "\n";
             }
-            try {
-                fileWriter.write(fileContent);
-                return true;
-            } catch (IOException e) {
-                e.printStackTrace();
-                return false;
-            }
+            String fileName = huntToSave.getName() + "_" + huntToSave.getID() + ".txt";
+            writeOnSD(fileName, fileContent);
+            return true;
         } else {
             return false;
         }

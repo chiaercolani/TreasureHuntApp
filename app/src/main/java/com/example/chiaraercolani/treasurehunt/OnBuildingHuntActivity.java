@@ -23,7 +23,6 @@ public class OnBuildingHuntActivity extends AppCompatActivity {
     private final static int CREATE_NEW_HUNT_ACTIVITY_REQUEST_CODE = 0;
     public final static String HUNT_NAME_EXTRA = "huntnameextra";
 
-    ArrayList<Step> steps = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

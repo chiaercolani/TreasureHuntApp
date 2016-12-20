@@ -293,4 +293,12 @@ public class CreateHuntActivity extends AppCompatActivity {
             return v;
         }
     };
+
+    @Override
+    protected void onStop() {
+        onBuildingHunt.addSteps(steps);
+        HuntFileWriter writer = new HuntFileWriter(getApplicationContext(), onBuildingHunt);
+        writer.write();
+        super.onStop();
+    }
 }

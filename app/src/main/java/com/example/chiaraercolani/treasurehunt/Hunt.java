@@ -42,6 +42,8 @@ public class Hunt {
         steps.add(step);
     }
 
+    public void addSteps(ArrayList<Step> steps){ this.steps.addAll(steps);}
+
     public Step getStep(int index){
         return steps.get(index);
     }
