@@ -95,7 +95,8 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
+        Intent intent =getIntent();
+        HuntFileReader huntFileReader = new HuntFileReader(intent.getStringExtra("filename"));
 
     }
 
@@ -140,5 +141,7 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
 
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
+
+
 
 }

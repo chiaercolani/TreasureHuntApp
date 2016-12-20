@@ -16,6 +16,8 @@ import java.util.List;
 
 public class JoinHuntActivity extends AppCompatActivity {
 
+    List<File> files = getListFiles(new File(getApplicationContext().getFilesDir().getPath()));
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,7 +26,6 @@ public class JoinHuntActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        List<File> files = getListFiles(new File("localhost/chiaraercolani/AndroidStudioProjects/TreasureHuntApp/build/intermediates"));
 
         final ListView listview =(ListView) findViewById(R.id.join_hunt_list);
 
@@ -43,8 +44,7 @@ public class JoinHuntActivity extends AppCompatActivity {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Intent intent = new Intent();
             intent.setClass(JoinHuntActivity.this, JoinedHuntStartActivity.class);
-            intent.putExtra("position", position);
-            intent.putExtra("id", id);
+            intent.putExtra("filename", files.get(position).getName());
             startActivity(intent);
         }
 
