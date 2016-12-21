@@ -39,27 +39,14 @@ public class OnBuildingHuntActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("On building hunts"); //TODO put a nice title
 
-        onBuildingHuntsList = getListFiles(getApplicationContext().getFilesDir());
+        HuntDirectoryReader huntDirectoryReader = new HuntDirectoryReader(getApplicationContext().getFilesDir());
+        onBuildingHuntsList = huntDirectoryReader.getHuntFileList();
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, onBuildingHuntsList);
         ListView listView = (ListView) findViewById(R.id.on_building_hunt_list);
         listView.setAdapter(adapter);
 
     }
 
-    private ArrayList<File> getListFiles(File parentDir) {
-        ArrayList<File> inFiles = new ArrayList<File>();
-        File[] files = parentDir.listFiles();
-        for (File file : files) {
-            if (file.isDirectory()) {
-                inFiles.addAll(getListFiles(file));
-            } else {
-                if(file.getName().endsWith(".txt")){
-                    inFiles.add(file);
-                }
-            }
-        }
-        return inFiles;
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -104,7 +91,7 @@ public class OnBuildingHuntActivity extends AppCompatActivity {
                     EditText editText = (EditText) d.findViewById(R.id.new_hunt_name);
                     String huntName = editText.getText().toString();
 
-                    if(!huntName.equals("") && !huntName.contains(HuntFileWriter.separator)) {
+                    if(!huntName.equals("") && !huntName.contains(HuntFileWriter.SEPARATOR)) {
                         Intent intent = new Intent(getActivity(), CreateHuntActivity.class);
                         intent.putExtra(HUNT_NAME_EXTRA, huntName);
                         startActivityForResult(intent, CREATE_NEW_HUNT_ACTIVITY_REQUEST_CODE);

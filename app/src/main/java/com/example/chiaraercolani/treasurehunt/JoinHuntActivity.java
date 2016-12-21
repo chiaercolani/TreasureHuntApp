@@ -28,7 +28,8 @@ public class JoinHuntActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        files = getListFiles(getApplicationContext().getFilesDir());
+        HuntDirectoryReader huntDirectoryReader = new HuntDirectoryReader(getApplicationContext().getFilesDir());
+        files = huntDirectoryReader.getHuntFileList();
 
         final ListView listview =(ListView) findViewById(R.id.join_hunt_list);
 
@@ -36,9 +37,6 @@ public class JoinHuntActivity extends AppCompatActivity {
         listview.setAdapter(adapter);
 
         listview.setOnItemClickListener(JoinHuntItemClickListener);
-
-
-
 
     }
 
@@ -52,21 +50,5 @@ public class JoinHuntActivity extends AppCompatActivity {
         }
 
     };
-
-    private ArrayList<File> getListFiles(File parentDir) {
-        ArrayList<File> inFiles = new ArrayList<File>();
-        File[] files = parentDir.listFiles();
-        for (File file : files) {
-            if (file.isDirectory()) {
-                inFiles.addAll(getListFiles(file));
-            } else {
-                if(file.getName().endsWith(".txt")){
-                    inFiles.add(file);
-                }
-            }
-        }
-        return inFiles;
-    }
-
 
 }
