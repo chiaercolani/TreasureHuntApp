@@ -4,7 +4,9 @@ import android.*;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -87,6 +89,17 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
                     .build();
         }
 
+        Criteria criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+        criteria.setAltitudeRequired(false);
+        criteria.setBearingRequired(true);
+        criteria.setCostAllowed(true);
+        criteria.setPowerRequirement(Criteria.POWER_LOW);
+        String provider = locationManager.getBestProvider(criteria, true);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.requestLocationUpdates(provider, 2000L, 10F, locationListener);
+        }
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -95,8 +108,6 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
         Intent intent =getIntent();
         HuntFileReader huntFileReader = new HuntFileReader(intent.getStringExtra("filename"));
         steps = huntFileReader.getSteps();
-        steps.add(new Step("bvkjr", 6.5636876598000, 46.5200804175955, 254654, "bjchbr", "feger", "fnkfjv", "", "")); //TODO remove this line
-
     }
 
     protected void onStart() {
@@ -135,7 +146,9 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
         }
 
         if(steps.size()>0) {
-            displayStep(steps.get(0));
+            for(Step s : steps) {
+                displayStep(s);
+            }
         } else {
             Toast.makeText(this, "No step to display", Toast.LENGTH_SHORT).show();
         }
@@ -151,12 +164,31 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
     private void displayStep(Step step){
         LatLng latLng = new LatLng(step.getLatitude(),step.getLongitude());
         MarkerOptions options = new MarkerOptions().position(latLng);
-        options.title("new step");
+        options.title(step.getName());
         options.icon(BitmapDescriptorFactory.defaultMarker());
         options.draggable(false);
         stepMarker = mMap.addMarker(options);
     }
 
+
+    private final LocationListener locationListener = new LocationListener(){
+        public void onLocationChanged(Location location){
+            if(ContextCompat.checkSelfPermission(JoinedHuntStartActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+                if (mLastLocation != null) {
+                    currentLatitude = mLastLocation.getLatitude();
+                    currentLongitude = mLastLocation.getLongitude();
+                    updateCameraPosition();
+                }
+            }
+        }
+        public void onProviderDisabled(String provider){
+
+        }
+        public void onProviderEnabled(String provider){};
+        public void onStatusChanged(String provider, int status, Bundle
+                extras){};
+    };
 
 
 }

@@ -39,8 +39,8 @@ public class PickStepPositionActivity extends FragmentActivity implements OnMapR
 
     public static final String EXTRA_LATITUDE = "latitude";
     public static final String EXTRA_LONGITUDE = "longitude";
-    public static final int RESULT_CODE_STEP_PICKED = 0;
-    public static final int RESULT_CODE_CANCELED = 1;
+    public static final int RESULT_CODE_STEP_PICKED = 50;
+    public static final int RESULT_CODE_CANCELED = 51;
 
     private GoogleMap mMap;
     private double currentLatitude=0;
@@ -94,6 +94,7 @@ public class PickStepPositionActivity extends FragmentActivity implements OnMapR
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pick_step_position);
+        setResult(RESULT_CODE_CANCELED);
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 

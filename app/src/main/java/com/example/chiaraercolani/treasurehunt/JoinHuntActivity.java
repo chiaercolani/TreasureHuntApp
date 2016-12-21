@@ -47,7 +47,7 @@ public class JoinHuntActivity extends AppCompatActivity {
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Intent intent = new Intent();
             intent.setClass(JoinHuntActivity.this, JoinedHuntStartActivity.class);
-            intent.putExtra("filename", files.get(position).getName());
+            intent.putExtra("filename", files.get(position).getAbsolutePath());
             startActivity(intent);
         }
 

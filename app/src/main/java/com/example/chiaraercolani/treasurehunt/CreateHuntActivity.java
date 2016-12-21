@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -86,6 +87,10 @@ public class CreateHuntActivity extends AppCompatActivity {
                 newStepDialog.show(getSupportFragmentManager(), "create new step");
                 getSupportFragmentManager().executePendingTransactions();
                 setListeners(newStepDialog.getDialog());
+                return true;
+            case android.R.id.home :
+                saveCurrentHunt();
+                NavUtils.navigateUpFromSameTask(this);
                 return true;
 
             default:
@@ -294,11 +299,16 @@ public class CreateHuntActivity extends AppCompatActivity {
         }
     };
 
+
     @Override
-    protected void onStop() {
+    public void onBackPressed() {
+        saveCurrentHunt();
+        super.onBackPressed();
+    }
+
+    private void saveCurrentHunt(){
         onBuildingHunt.addSteps(steps);
         HuntFileWriter writer = new HuntFileWriter(getApplicationContext(), onBuildingHunt);
         writer.write();
-        super.onStop();
     }
 }
