@@ -89,7 +89,7 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+                .findFragmentById(R.id.map_joined_hunt);
         mapFragment.getMapAsync(this);
         Intent intent =getIntent();
         HuntFileReader huntFileReader = new HuntFileReader(intent.getStringExtra("filename"));

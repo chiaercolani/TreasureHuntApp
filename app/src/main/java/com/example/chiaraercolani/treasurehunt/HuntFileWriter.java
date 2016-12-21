@@ -31,7 +31,7 @@ public class HuntFileWriter  {
 
     public void writeOnSD(String filename, String body) {
         try {
-            File root = new File(Environment.getExternalStorageDirectory(), "Hunts");
+            File root = new File(context.getFilesDir(), "Hunts");
             if (!root.exists()) {
                 root.mkdirs();
             }
@@ -46,28 +46,24 @@ public class HuntFileWriter  {
         }
     }
 
-    public boolean write(){
-        if(fileWriter!=null && huntToSave!=null){
-            String fileContent = "";
-            fileContent += huntToSave.getName() + separator + huntToSave.getID() + "\n";
-            ArrayList<Step> steps = huntToSave.getSteps();
-            for(Step s : steps){
-                fileContent += s.getName() + separator;
-                fileContent += s.getID() + separator;
-                fileContent += s.getLatitude() + separator;
-                fileContent += s.getLongitude() + separator;
-                fileContent += s.getQuestion() + separator;
-                fileContent += s.getGoodAnswer() + separator;
-                fileContent += s.getWrongAnswer1() + separator;
-                fileContent += s.getWrongAnswer2() + separator;
-                fileContent += s.getWrongAnswer3() + separator;
-                fileContent += "\n";
-            }
-            String fileName = huntToSave.getName() + "_" + huntToSave.getID() + ".txt";
-            writeOnSD(fileName, fileContent);
-            return true;
-        } else {
-            return false;
+    public void write(){
+        String fileContent = "";
+        fileContent += huntToSave.getName() + separator + huntToSave.getID() + "\n";
+        ArrayList<Step> steps = huntToSave.getSteps();
+        for(Step s : steps){
+            fileContent += s.getName() + separator;
+            fileContent += s.getID() + separator;
+            fileContent += s.getLatitude() + separator;
+            fileContent += s.getLongitude() + separator;
+            fileContent += s.getQuestion() + separator;
+            fileContent += s.getGoodAnswer() + separator;
+            fileContent += s.getWrongAnswer1() + separator;
+            fileContent += s.getWrongAnswer2() + separator;
+            fileContent += s.getWrongAnswer3() + separator;
+            fileContent += "\n";
         }
+        String fileName = huntToSave.getName() + "_" + huntToSave.getID() + ".txt";
+        writeOnSD(fileName, fileContent);
+        writeOnSD("huntsample.txt", "fqerg");
     }
 }
