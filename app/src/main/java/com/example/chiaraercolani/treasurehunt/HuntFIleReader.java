@@ -33,14 +33,31 @@ public class HuntFileReader {
 
             while((line = bufferedReader.readLine()) != null){
                 String[] parts =  line.split("::");
-                Step step = new Step(parts[0],Double.parseDouble(parts[1]),Double.parseDouble(parts[2]),Long.parseLong(parts[3]),parts[4],parts[5],parts[6],parts[7],parts[8]);
-                steps.add(step);
+                Step step = null;
+                switch (parts.length) {
+                    case 7:
+                        step = new Step(parts[0],Double.parseDouble(parts[2]),Double.parseDouble(parts[3]),Long.parseLong(parts[1]),parts[4],parts[5],parts[6],"", "");
+                        break;
+                    case 8:
+                        step = new Step(parts[0],Double.parseDouble(parts[2]),Double.parseDouble(parts[3]),Long.parseLong(parts[1]),parts[4],parts[5],parts[6],parts[7],"");
+                        break;
+                    case 9:
+                        step = new Step(parts[0],Double.parseDouble(parts[2]),Double.parseDouble(parts[3]),Long.parseLong(parts[1]),parts[4],parts[5],parts[6],parts[7],parts[8]);
+                        break;
+                    default:
+                        //TODO manage error
+                        break;
+                }
+                if(null!=step){
+                    steps.add(step);
+                }
             }
 
             // Always close files.
             bufferedReader.close();
         }
         catch(IOException ex) {
+            ex.printStackTrace();
             System.out.println(
                     "Error reading file '" + fileName + "'");
 
