@@ -16,7 +16,7 @@ import java.util.List;
 
 public class JoinHuntActivity extends AppCompatActivity {
 
-    List<File> files = getListFiles(new File(getApplicationContext().getFilesDir().getPath()));
+    List<File> files;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +26,7 @@ public class JoinHuntActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        files = getListFiles(getApplicationContext().getFilesDir());
 
         final ListView listview =(ListView) findViewById(R.id.join_hunt_list);
 
