@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -94,7 +95,8 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
         Intent intent =getIntent();
         HuntFileReader huntFileReader = new HuntFileReader(intent.getStringExtra("filename"));
         steps = huntFileReader.getSteps();
-        displayStep(steps.get(1));
+        steps.add(new Step("bvkjr", 6.5636876598000, 46.5200804175955, 254654, "bjchbr", "feger", "fnkfjv", "", "")); //TODO remove this line
+
     }
 
     protected void onStart() {
@@ -131,6 +133,13 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
             mMap.getUiSettings().setZoomGesturesEnabled(true);
 
         }
+
+        if(steps.size()>0) {
+            displayStep(steps.get(0));
+        } else {
+            Toast.makeText(this, "No step to display", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private void updateCameraPosition(){
@@ -144,7 +153,7 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
         MarkerOptions options = new MarkerOptions().position(latLng);
         options.title("new step");
         options.icon(BitmapDescriptorFactory.defaultMarker());
-        options.draggable(true);
+        options.draggable(false);
         stepMarker = mMap.addMarker(options);
     }
 
