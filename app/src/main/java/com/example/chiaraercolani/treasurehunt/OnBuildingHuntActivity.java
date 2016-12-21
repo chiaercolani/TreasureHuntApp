@@ -13,15 +13,20 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class OnBuildingHuntActivity extends AppCompatActivity {
 
     private final static int CREATE_NEW_HUNT_ACTIVITY_REQUEST_CODE = 0;
     public final static String HUNT_NAME_EXTRA = "huntnameextra";
+
+    private ArrayList<File> onBuildingHuntsList;
 
 
     @Override
@@ -34,13 +39,26 @@ public class OnBuildingHuntActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("On building hunts"); //TODO put a nice title
 
-//        ArrayList<String> stringArray = new ArrayList<String>();
-//        stringArray.add("hunt1");
-//        stringArray.add("hunt2");
-//        stringArray.add("hunt3");
-//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, stringArray);
-//        ListView listView = (ListView) findViewById(R.id.on_building_hunt_list);
-//        listView.setAdapter(adapter);
+        onBuildingHuntsList = getListFiles(getApplicationContext().getFilesDir());
+        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, onBuildingHuntsList);
+        ListView listView = (ListView) findViewById(R.id.on_building_hunt_list);
+        listView.setAdapter(adapter);
+
+    }
+
+    private ArrayList<File> getListFiles(File parentDir) {
+        ArrayList<File> inFiles = new ArrayList<File>();
+        File[] files = parentDir.listFiles();
+        for (File file : files) {
+            if (file.isDirectory()) {
+                inFiles.addAll(getListFiles(file));
+            } else {
+                if(file.getName().endsWith(".txt")){
+                    inFiles.add(file);
+                }
+            }
+        }
+        return inFiles;
     }
 
     @Override
