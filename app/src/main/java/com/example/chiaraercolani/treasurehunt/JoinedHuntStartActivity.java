@@ -27,16 +27,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+
 /**
  * Created by chiaraercolani on 14/12/16.
  */
 
 public class JoinedHuntStartActivity extends FragmentActivity implements OnMapReadyCallback {
-
-    public static final String EXTRA_LATITUDE = "latitude";
-    public static final String EXTRA_LONGITUDE = "longitude";
-    public static final int RESULT_CODE_STEP_PICKED = 0;
-    public static final int RESULT_CODE_CANCELED = 1;
 
     private GoogleMap mMap;
     private double currentLatitude=0;
@@ -45,9 +42,8 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
     private Marker stepMarker;
-    private Button okButton;
-    private Button cancelButton;
 
+    ArrayList<Step> steps;
 
     private GoogleApiClient.ConnectionCallbacks connectionCallbacks = new GoogleApiClient.ConnectionCallbacks() {
         @Override
@@ -97,7 +93,8 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
         mapFragment.getMapAsync(this);
         Intent intent =getIntent();
         HuntFileReader huntFileReader = new HuntFileReader(intent.getStringExtra("filename"));
-
+        steps = huntFileReader.getSteps();
+        displayStep(steps.get(1));
     }
 
     protected void onStart() {
@@ -140,6 +137,15 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
         CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(currentLatitude, currentLongitude)).zoom(16).build();
 
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+    }
+
+    private void displayStep(Step step){
+        LatLng latLng = new LatLng(step.getLatitude(),step.getLongitude());
+        MarkerOptions options = new MarkerOptions().position(latLng);
+        options.title("new step");
+        options.icon(BitmapDescriptorFactory.defaultMarker());
+        options.draggable(true);
+        stepMarker = mMap.addMarker(options);
     }
 
 

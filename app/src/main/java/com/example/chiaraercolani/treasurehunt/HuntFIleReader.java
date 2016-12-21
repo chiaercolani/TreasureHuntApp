@@ -12,13 +12,13 @@ import java.util.ArrayList;
 public class HuntFileReader {
 
     private FileReader fileReader;
-
+    ArrayList<Step> steps = new ArrayList<>();
 
     public HuntFileReader (String fileName){
 
         // This will reference one line at a time
         String line = null;
-        ArrayList<Step> steps = new ArrayList<>();
+
 
         try {
             // FileReader reads text files in the default encoding.
@@ -46,5 +46,7 @@ public class HuntFileReader {
 
         }
     }
+
+    public ArrayList<Step> getSteps(){return steps;}
 }
 
