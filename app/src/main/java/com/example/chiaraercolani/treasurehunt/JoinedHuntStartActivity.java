@@ -15,6 +15,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -44,6 +45,8 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
     private Marker stepMarker;
     private double distanceToStep;
     private ArrayList<Step> steps;
+    private Step currentStep;
+    private DisplayQuestionDialog displayQuestionDialog;
 
 
 
@@ -86,16 +89,9 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
                     .build();
         }
 
-        Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_FINE);
-        criteria.setAltitudeRequired(false);
-        criteria.setBearingRequired(true);
-        criteria.setCostAllowed(true);
-        criteria.setPowerRequirement(Criteria.POWER_LOW);
-        String provider = locationManager.getBestProvider(criteria, true);
-
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(provider, 2000L, 10F, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, locationListener);
         }
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -143,7 +139,8 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
         }
 
         if(steps.size()>0) {
-            displayStep(steps.get(0));
+            currentStep = steps.get(0);
+            displayStep(currentStep);
         } else {
             Toast.makeText(this, "No step to display", Toast.LENGTH_SHORT).show();
         }
@@ -151,7 +148,7 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
     }
 
     private void updateCameraPosition(){
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())).zoom(16).build();
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())).zoom(18).build();
 
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
@@ -166,8 +163,10 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
     }
 
 
-    private final LocationListener locationListener = new LocationListener(){
+    private LocationListener locationListener = new LocationListener(){
+        @Override
         public void onLocationChanged(Location location){
+            Toast.makeText(JoinedHuntStartActivity.this, "moving...", Toast.LENGTH_SHORT).show();
             if(ContextCompat.checkSelfPermission(JoinedHuntStartActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
                 if (currentLocation != null) {
@@ -179,17 +178,29 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
                         stepMarker.getPosition().latitude,
                         stepMarker.getPosition().longitude);
                 if(distanceToStep < 10){
-                    DialogFragment displayQuestionDialog = new DisplayQuestionDialog();
-                    displayQuestionDialog.show(getFragmentManager(), "Display question");
-                    getFragmentManager().executePendingTransactions();
+                    Toast.makeText(JoinedHuntStartActivity.this, "close to marker", Toast.LENGTH_SHORT).show();
+                    if(displayQuestionDialog==null) {
+                        displayQuestionDialog = new DisplayQuestionDialog();
+                    }
+                    if (!displayQuestionDialog.isAdded()) {
+                        displayQuestionDialog.show(getFragmentManager(), "Display question");
+                        getFragmentManager().executePendingTransactions();
+                        displayQuestionDialog.setStep(currentStep);
+                    }
                 }
 
             }
         }
+
+        @Override
         public void onProviderDisabled(String provider){
 
         }
+
+        @Override
         public void onProviderEnabled(String provider){};
+
+        @Override
         public void onStatusChanged(String provider, int status, Bundle
                 extras){};
     };
