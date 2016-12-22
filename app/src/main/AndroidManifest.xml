@@ -16,6 +16,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+
         <activity android:name=".StartMenuActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -79,6 +80,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.chiaraercolani.treasurehunt.CreateHuntActivity" />
         </activity>
+        <!--<service android:name=".DisplayQuestionDialog"/> -->
     </application>
 
 </manifest>
