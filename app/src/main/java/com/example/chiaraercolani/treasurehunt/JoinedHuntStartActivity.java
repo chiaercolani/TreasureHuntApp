@@ -13,8 +13,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
-import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -39,12 +37,11 @@ import java.util.ArrayList;
 public class JoinedHuntStartActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private double currentLatitude=0;
-    private double currentLongitude=0;
     private LocationManager locationManager;
     private GoogleApiClient mGoogleApiClient;
-    private Location mLastLocation;
+    private Location currentLocation;
     private Marker stepMarker;
+    private double distanceToStep;
 
     ArrayList<Step> steps;
 
@@ -52,10 +49,8 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
         @Override
         public void onConnected(@Nullable Bundle bundle) {
             if(ContextCompat.checkSelfPermission(JoinedHuntStartActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-                if (mLastLocation != null) {
-                    currentLatitude = mLastLocation.getLatitude();
-                    currentLongitude = mLastLocation.getLongitude();
+                currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+                if (currentLocation != null) {
                     updateCameraPosition();
                 }
             }
@@ -146,9 +141,7 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
         }
 
         if(steps.size()>0) {
-            for(Step s : steps) {
-                displayStep(s);
-            }
+            displayStep(steps.get(0));
         } else {
             Toast.makeText(this, "No step to display", Toast.LENGTH_SHORT).show();
         }
@@ -156,7 +149,7 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
     }
 
     private void updateCameraPosition(){
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(currentLatitude, currentLongitude)).zoom(16).build();
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())).zoom(16).build();
 
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
@@ -174,12 +167,19 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
     private final LocationListener locationListener = new LocationListener(){
         public void onLocationChanged(Location location){
             if(ContextCompat.checkSelfPermission(JoinedHuntStartActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-                if (mLastLocation != null) {
-                    currentLatitude = mLastLocation.getLatitude();
-                    currentLongitude = mLastLocation.getLongitude();
+                currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+                if (currentLocation != null) {
                     updateCameraPosition();
                 }
+
+                distanceToStep = meterDistanceBetweenPoints(currentLocation.getLatitude(),
+                        currentLocation.getLongitude(),
+                        stepMarker.getPosition().latitude,
+                        stepMarker.getPosition().longitude);
+                if(distanceToStep < 10){
+
+                }
+
             }
         }
         public void onProviderDisabled(String provider){
@@ -190,5 +190,21 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
                 extras){};
     };
 
+
+    private double meterDistanceBetweenPoints(double lat_a, double lng_a, double lat_b, double lng_b) {
+        float pk = (float) (180.f/Math.PI);
+
+        double a1 = lat_a / pk;
+        double a2 = lng_a / pk;
+        double b1 = lat_b / pk;
+        double b2 = lng_b / pk;
+
+        double t1 = Math.cos(a1)*Math.cos(a2)*Math.cos(b1)*Math.cos(b2);
+        double t2 = Math.cos(a1)*Math.sin(a2)*Math.cos(b1)*Math.sin(b2);
+        double t3 = Math.sin(a1)*Math.sin(b1);
+        double tt = Math.acos(t1 + t2 + t3);
+
+        return 6366000*tt;
+    }
 
 }
