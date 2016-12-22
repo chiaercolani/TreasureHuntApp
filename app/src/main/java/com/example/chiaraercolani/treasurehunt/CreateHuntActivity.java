@@ -23,7 +23,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -187,32 +186,32 @@ public class CreateHuntActivity extends AppCompatActivity {
             } else {
                 longitudeEditText.setError(null);
             }
-            if(nameEditText.getText().toString().isEmpty() || nameEditText.getText().toString().contains(HuntFileWriter.separator)){
+            if(nameEditText.getText().toString().isEmpty() || nameEditText.getText().toString().contains(HuntFileWriter.SEPARATOR)){
                 nameEditText.setError("Invalid");
             } else {
                 nameEditText.setError(null);
             }
-            if(questionEditText.getText().toString().isEmpty() || questionEditText.getText().toString().contains(HuntFileWriter.separator)){
+            if(questionEditText.getText().toString().isEmpty() || questionEditText.getText().toString().contains(HuntFileWriter.SEPARATOR)){
                 questionEditText.setError("Invalid");
             } else {
                 questionEditText.setError(null);
             }
-            if(goodAnswerEditText.getText().toString().isEmpty() || goodAnswerEditText.getText().toString().contains(HuntFileWriter.separator)){
+            if(goodAnswerEditText.getText().toString().isEmpty() || goodAnswerEditText.getText().toString().contains(HuntFileWriter.SEPARATOR)){
                 goodAnswerEditText.setError("Invalid");
             } else {
                 goodAnswerEditText.setError(null);
             }
-            if(badAnswer1EditText.getText().toString().isEmpty() || badAnswer1EditText.getText().toString().contains(HuntFileWriter.separator)){
+            if(badAnswer1EditText.getText().toString().isEmpty() || badAnswer1EditText.getText().toString().contains(HuntFileWriter.SEPARATOR)){
                 badAnswer1EditText.setError("Invalid");
             } else {
                 badAnswer1EditText.setError(null);
             }
-            if(badAnswer2EditText.getText().toString().contains(HuntFileWriter.separator)){
+            if(badAnswer2EditText.getText().toString().contains(HuntFileWriter.SEPARATOR)){
                 badAnswer2EditText.setError("Invalid");
             } else {
                 badAnswer2EditText.setError(null);
             }
-            if(badAnswer3EditText.getText().toString().contains(HuntFileWriter.separator)){
+            if(badAnswer3EditText.getText().toString().contains(HuntFileWriter.SEPARATOR)){
                 badAnswer3EditText.setError("Invalid");
             } else {
                 badAnswer3EditText.setError(null);

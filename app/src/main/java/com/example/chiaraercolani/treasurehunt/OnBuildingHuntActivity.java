@@ -13,15 +13,20 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class OnBuildingHuntActivity extends AppCompatActivity {
 
     private final static int CREATE_NEW_HUNT_ACTIVITY_REQUEST_CODE = 0;
     public final static String HUNT_NAME_EXTRA = "huntnameextra";
+
+    private ArrayList<File> onBuildingHuntsList;
 
 
     @Override
@@ -34,14 +39,14 @@ public class OnBuildingHuntActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("On building hunts"); //TODO put a nice title
 
-//        ArrayList<String> stringArray = new ArrayList<String>();
-//        stringArray.add("hunt1");
-//        stringArray.add("hunt2");
-//        stringArray.add("hunt3");
-//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, stringArray);
-//        ListView listView = (ListView) findViewById(R.id.on_building_hunt_list);
-//        listView.setAdapter(adapter);
+        HuntDirectoryReader huntDirectoryReader = new HuntDirectoryReader(getApplicationContext().getFilesDir());
+        onBuildingHuntsList = huntDirectoryReader.getHuntFileList();
+        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, onBuildingHuntsList);
+        ListView listView = (ListView) findViewById(R.id.on_building_hunt_list);
+        listView.setAdapter(adapter);
+
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -86,7 +91,7 @@ public class OnBuildingHuntActivity extends AppCompatActivity {
                     EditText editText = (EditText) d.findViewById(R.id.new_hunt_name);
                     String huntName = editText.getText().toString();
 
-                    if(!huntName.equals("") && !huntName.contains(HuntFileWriter.separator)) {
+                    if(!huntName.equals("") && !huntName.contains(HuntFileWriter.SEPARATOR)) {
                         Intent intent = new Intent(getActivity(), CreateHuntActivity.class);
                         intent.putExtra(HUNT_NAME_EXTRA, huntName);
                         startActivityForResult(intent, CREATE_NEW_HUNT_ACTIVITY_REQUEST_CODE);

@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,18 +28,15 @@ public class JoinHuntActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        files = getListFiles(getApplicationContext().getFilesDir());
+        HuntDirectoryReader huntDirectoryReader = new HuntDirectoryReader(getApplicationContext().getFilesDir());
+        files = huntDirectoryReader.getHuntFileList();
 
         final ListView listview =(ListView) findViewById(R.id.join_hunt_list);
-        files = getListFiles(this.getFilesDir());
 
         final ArrayAdapter adapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1, files);
         listview.setAdapter(adapter);
 
         listview.setOnItemClickListener(JoinHuntItemClickListener);
-
-
-
 
     }
 
@@ -52,21 +50,5 @@ public class JoinHuntActivity extends AppCompatActivity {
         }
 
     };
-
-    private List<File> getListFiles(File parentDir) {
-        ArrayList<File> inFiles = new ArrayList<File>();
-        File[] files = parentDir.listFiles();
-        for (File file : files) {
-            if (file.isDirectory()) {
-                inFiles.addAll(getListFiles(file));
-            } else {
-                if(file.getName().endsWith(".txt")){
-                    inFiles.add(file);
-                }
-            }
-        }
-        return inFiles;
-    }
-
 
 }
