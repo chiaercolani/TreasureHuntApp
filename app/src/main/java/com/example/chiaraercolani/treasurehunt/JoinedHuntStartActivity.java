@@ -1,6 +1,8 @@
 package com.example.chiaraercolani.treasurehunt;
 
 import android.*;
+import android.app.DialogFragment;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -37,13 +39,13 @@ import java.util.ArrayList;
 public class JoinedHuntStartActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private LocationManager locationManager;
     private GoogleApiClient mGoogleApiClient;
     private Location currentLocation;
     private Marker stepMarker;
     private double distanceToStep;
+    private ArrayList<Step> steps;
 
-    ArrayList<Step> steps;
+
 
     private GoogleApiClient.ConnectionCallbacks connectionCallbacks = new GoogleApiClient.ConnectionCallbacks() {
         @Override
@@ -73,7 +75,7 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_joined_hunt_start);
 
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         // Create an instance of GoogleAPIClient.
         if (mGoogleApiClient == null) {
@@ -177,7 +179,9 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
                         stepMarker.getPosition().latitude,
                         stepMarker.getPosition().longitude);
                 if(distanceToStep < 10){
-
+                    DialogFragment displayQuestionDialog = new DisplayQuestionDialog();
+                    displayQuestionDialog.show(getFragmentManager(), "Display question");
+                    getFragmentManager().executePendingTransactions();
                 }
 
             }
