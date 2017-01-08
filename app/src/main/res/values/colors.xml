@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
 
         <color name="White">#FFFFFF</color>
         <color name="Ivory">#FFFFF0</color>
@@ -59,7 +56,7 @@
         <color name="BurlyWood">#DEB887</color>
         <color name="Plum">#DDA0DD</color>
         <color name="Gainsboro">#DCDCDC</color>
-        <color name="Crimson">#DC143C</color>
+        <color name="Crimson">#dc143c</color>
         <color name="PaleVioletRed">#DB7093</color>
         <color name="Goldenrod">#DAA520</color>
         <color name="Orchid">#DA70D6</color>
@@ -114,7 +111,7 @@
         <color name="CornflowerBlue">#6495ED</color>
         <color name="CadetBlue">#5F9EA0</color>
         <color name="DarkOliveGreen">#556B2F</color>
-        <color name="Indigo">#4B0082</color>
+        <color name="Indigo">#4b0082</color>
         <color name="MediumTurquoise">#48D1CC</color>
         <color name="DarkSlateBlue">#483D8B</color>
         <color name="SteelBlue">#4682B4</color>
@@ -139,10 +136,12 @@
         <color name="Teal">#008080</color>
         <color name="Green">#008000</color>
         <color name="DarkGreen">#006400</color>
-        <color name="Blue">#0000FF</color>
+        <color name="Blue">#0000ff</color>
         <color name="MediumBlue">#0000CD</color>
         <color name="DarkBlue">#00008B</color>
         <color name="Navy">#000080</color>
+        <color name="DarkNavy">#000030</color>
         <color name="Black">#000000</color>
+
 
 </resources>

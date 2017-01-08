@@ -166,7 +166,6 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
     private LocationListener locationListener = new LocationListener(){
         @Override
         public void onLocationChanged(Location location){
-            Toast.makeText(JoinedHuntStartActivity.this, "moving...", Toast.LENGTH_SHORT).show();
             if(ContextCompat.checkSelfPermission(JoinedHuntStartActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
                 if (currentLocation != null) {
@@ -178,7 +177,6 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
                         stepMarker.getPosition().latitude,
                         stepMarker.getPosition().longitude);
                 if(distanceToStep < 10){
-                    Toast.makeText(JoinedHuntStartActivity.this, "close to marker", Toast.LENGTH_SHORT).show();
                     if(displayQuestionDialog==null) {
                         displayQuestionDialog = new DisplayQuestionDialog();
                     }

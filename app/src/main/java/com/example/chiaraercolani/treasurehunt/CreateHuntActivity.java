@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -129,7 +130,7 @@ public class CreateHuntActivity extends AppCompatActivity {
             LayoutInflater inflater = getActivity().getLayoutInflater();
 
             View view = inflater.inflate(R.layout.add_step_dialog, null);
-            ((Button)view.findViewById(R.id.pick_step_position_button)).setOnClickListener(new View.OnClickListener() {
+            ((ImageButton)view.findViewById(R.id.pick_step_position_button)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getActivity(), PickStepPositionActivity.class);
@@ -217,13 +218,13 @@ public class CreateHuntActivity extends AppCompatActivity {
                 badAnswer3EditText.setError(null);
             }
             if(latitudeEditText.getError()==null
-                    || longitudeEditText.getError()==null
-                    || nameEditText.getError()==null
-                    || questionEditText.getError()==null
-                    || goodAnswerEditText.getError()==null
-                    || badAnswer1EditText.getError()==null
-                    || badAnswer2EditText.getError()==null
-                    || badAnswer3EditText.getError()==null) {
+                    && longitudeEditText.getError()==null
+                    && nameEditText.getError()==null
+                    && questionEditText.getError()==null
+                    && goodAnswerEditText.getError()==null
+                    && badAnswer1EditText.getError()==null
+                    && badAnswer2EditText.getError()==null
+                    && badAnswer3EditText.getError()==null) {
                 newStepOkButton.setEnabled(true);
             } else {
                 newStepOkButton.setEnabled(false);
@@ -306,8 +307,10 @@ public class CreateHuntActivity extends AppCompatActivity {
     }
 
     private void saveCurrentHunt(){
-        onBuildingHunt.addSteps(steps);
-        HuntFileWriter writer = new HuntFileWriter(getApplicationContext(), onBuildingHunt);
-        writer.write();
+        if(!steps.isEmpty()) {
+            onBuildingHunt.addSteps(steps);
+            HuntFileWriter writer = new HuntFileWriter(getApplicationContext(), onBuildingHunt);
+            writer.write();
+        }
     }
 }
