@@ -1,4 +1,5 @@
 <resources>
+    <string name="google_app_id">1:993100667963:android:ec1081bd80aeaaf0</string>
     <string name="app_name">TreasureHunt</string>
     <string name="join">JOIN A HUNT</string>
     <string name="create_a_hunt">CREATE A HUNT</string>

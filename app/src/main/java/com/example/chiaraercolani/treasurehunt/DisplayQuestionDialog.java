@@ -1,5 +1,6 @@
 package com.example.chiaraercolani.treasurehunt;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
@@ -24,9 +25,18 @@ public class DisplayQuestionDialog extends DialogFragment {
     TextView textView;
     View view;
 
+    AlertDialog.Builder builder;
+
+    Button button1;
+    Button button2;
+    Button button3;
+    Button button4;
+
+    JoinedHuntStartActivity.MyDialogCloseListener closeListener;
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
         view =inflater.inflate(R.layout.question_dialog, null);
@@ -37,13 +47,14 @@ public class DisplayQuestionDialog extends DialogFragment {
         return builder.create();
     }
 
+
     public void setStep(Step step){
         textView.setText(step.getQuestion());
 
-        Button button1 = (Button)view.findViewById(R.id.question_dialog_button_1);
-        Button button2 = (Button)view.findViewById(R.id.question_dialog_button_2);
-        Button button3 = (Button)view.findViewById(R.id.question_dialog_button_3);
-        Button button4 = (Button)view.findViewById(R.id.question_dialog_button_4);
+        button1 = (Button)view.findViewById(R.id.question_dialog_button_1);
+        button2 = (Button)view.findViewById(R.id.question_dialog_button_2);
+        button3 = (Button)view.findViewById(R.id.question_dialog_button_3);
+        button4 = (Button)view.findViewById(R.id.question_dialog_button_4);
 
         button1.setEnabled(true);
         button2.setEnabled(true);
@@ -112,6 +123,64 @@ public class DisplayQuestionDialog extends DialogFragment {
             }
         }
 
+    }
+
+    public void getAnswer (final Step step){
+        button1.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (button1.getText()==step.getGoodAnswer()){
+                    Toast.makeText(v.getContext(), "BRAVO!", Toast.LENGTH_SHORT).show();
+                    getDialog().dismiss();
+
+                }else{
+                    Toast.makeText(v.getContext(), "Wrong Answer!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        button2.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (button2.getText()==step.getGoodAnswer()){
+                    Toast.makeText(v.getContext(), "BRAVO!", Toast.LENGTH_SHORT).show();
+                    getDialog().dismiss();
+                }else{
+                    Toast.makeText(v.getContext(), "Wrong Answer!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        button3.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (button3.getText()==step.getGoodAnswer()){
+                    Toast.makeText(v.getContext(), "BRAVO!", Toast.LENGTH_SHORT).show();
+                    getDialog().dismiss();
+                }else{
+                    Toast.makeText(v.getContext(), "Wrong Answer!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+        button4.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (button4.getText()==step.getGoodAnswer()){
+                    Toast.makeText(v.getContext(), "BRAVO!", Toast.LENGTH_SHORT).show();
+                    getDialog().dismiss();
+                }else{
+                    Toast.makeText(v.getContext(), "Wrong Answer!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    public void DismissListner(JoinedHuntStartActivity.MyDialogCloseListener closeListener){
+        this.closeListener = closeListener;
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+        if(closeListener!=null){
+            closeListener.handleDialogClose(null);
+        }
 
     }
+
+
 }

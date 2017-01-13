@@ -1,16 +1,21 @@
 package com.example.chiaraercolani.treasurehunt;
 
 import android.*;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Service;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
@@ -18,6 +23,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.widget.Toast;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -48,12 +56,41 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
     private Step currentStep;
     private DisplayQuestionDialog displayQuestionDialog;
 
+    int position = 0;
 
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("JoinedHuntStart Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
+    }
+
+
+    public interface MyDialogCloseListener
+    {
+        public void handleDialogClose(DialogInterface dialog);
+    }
+
+    MyDialogCloseListener closeListener   = new MyDialogCloseListener() {
+        @Override
+        public void handleDialogClose(DialogInterface dialog) {
+            displayNextStep(currentStep);
+        }
+    };
 
     private GoogleApiClient.ConnectionCallbacks connectionCallbacks = new GoogleApiClient.ConnectionCallbacks() {
         @Override
         public void onConnected(@Nullable Bundle bundle) {
-            if(ContextCompat.checkSelfPermission(JoinedHuntStartActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            if(ContextCompat.checkSelfPermission(JoinedHuntStartActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
                 if (currentLocation != null) {
                     updateCameraPosition();
@@ -80,13 +117,34 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
 
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
+        //dialog to prompt user to enable the GPS provider
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            // Build the alert dialog
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Location Services Not Active");
+            builder.setMessage("Please enable Location Services and GPS");
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    // Show location settings when the user acknowledges the alert dialog
+                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(intent);
+                }
+            });
+            Dialog alertDialog = builder.create();
+            alertDialog.setCanceledOnTouchOutside(false);
+            alertDialog.show();
+        }
+
         // Create an instance of GoogleAPIClient.
         if (mGoogleApiClient == null) {
+            // ATTENTION: This "addApi(AppIndex.API)"was auto-generated to implement the App Indexing API.
+            // See https://g.co/AppIndexing/AndroidStudio for more information.
             mGoogleApiClient = new GoogleApiClient.Builder(this)
                     .addConnectionCallbacks(connectionCallbacks)
                     .addOnConnectionFailedListener(onConnectionFailedListener)
                     .addApi(LocationServices.API)
-                    .build();
+                    .addApi(AppIndex.API).build();
         }
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -98,7 +156,7 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map_joined_hunt);
         mapFragment.getMapAsync(this);
-        Intent intent =getIntent();
+        Intent intent = getIntent();
         HuntFileReader huntFileReader = new HuntFileReader(intent.getStringExtra("filename"));
         steps = huntFileReader.getSteps();
     }
@@ -106,11 +164,16 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
     protected void onStart() {
         mGoogleApiClient.connect();
         super.onStart();
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.start(mGoogleApiClient, getIndexApiAction());
     }
 
     protected void onStop() {
         mGoogleApiClient.disconnect();
-        super.onStop();
+        super.onStop();// ATTENTION: This was auto-generated to implement the App Indexing API.
+// See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.end(mGoogleApiClient, getIndexApiAction());
     }
 
     /**
@@ -126,7 +189,7 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        if(ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
 
             mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             mMap.setMyLocationEnabled(true);
@@ -139,6 +202,7 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
         }
 
         if(steps.size()>0) {
+
             currentStep = steps.get(0);
             displayStep(currentStep);
         } else {
@@ -162,33 +226,55 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
         stepMarker = mMap.addMarker(options);
     }
 
+    private void displayNextStep(Step step){
+        position=position +1;
+        currentStep = steps.get(position);
+        removeStep();
+        if(position < steps.size()) {
+            displayStep(currentStep);
+        }else{
+            Toast.makeText(getBaseContext(), "END OF THE HUNT", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void removeStep(){
+        mMap.clear();
+    }
 
     private LocationListener locationListener = new LocationListener(){
         @Override
         public void onLocationChanged(Location location){
-            if(ContextCompat.checkSelfPermission(JoinedHuntStartActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            if(ContextCompat.checkSelfPermission(JoinedHuntStartActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
                 if (currentLocation != null) {
-                    updateCameraPosition();
+                    //updateCameraPosition();
                 }
 
                 distanceToStep = meterDistanceBetweenPoints(currentLocation.getLatitude(),
                         currentLocation.getLongitude(),
                         stepMarker.getPosition().latitude,
                         stepMarker.getPosition().longitude);
-                if(distanceToStep < 10){
+                if(distanceToStep < 100){
                     if(displayQuestionDialog==null) {
                         displayQuestionDialog = new DisplayQuestionDialog();
+
                     }
                     if (!displayQuestionDialog.isAdded()) {
                         displayQuestionDialog.show(getFragmentManager(), "Display question");
                         getFragmentManager().executePendingTransactions();
+                        displayQuestionDialog.setCancelable(false);
                         displayQuestionDialog.setStep(currentStep);
+                        displayQuestionDialog.getAnswer(currentStep);
+                        //TODO call displayNextStep when the dialog is dismissed
+                        displayQuestionDialog.DismissListner(closeListener);
+
                     }
                 }
 
             }
         }
+
+
 
         @Override
         public void onProviderDisabled(String provider){
@@ -202,6 +288,8 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
         public void onStatusChanged(String provider, int status, Bundle
                 extras){};
     };
+
+
 
 
     private double meterDistanceBetweenPoints(double lat_a, double lng_a, double lat_b, double lng_b) {
@@ -218,6 +306,12 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
         double tt = Math.acos(t1 + t2 + t3);
 
         return 6366000*tt;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        //TODO save position
     }
 
 }
