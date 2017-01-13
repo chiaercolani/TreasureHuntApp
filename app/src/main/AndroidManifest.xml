@@ -72,7 +72,7 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDR0xxTnX3FAtNuFrJDbJTr7XT0E8RuzLo" />
+            android:value="YOUR KEY HERE" />
 
         <activity
             android:name=".PickStepPositionActivity"
