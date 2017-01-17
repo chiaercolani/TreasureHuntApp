@@ -129,7 +129,7 @@ public class DisplayQuestionDialog extends DialogFragment {
         button1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (button1.getText()==step.getGoodAnswer()){
-                    Toast.makeText(v.getContext(), "BRAVO!", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(v.getContext(), "BRAVO!", Toast.LENGTH_SHORT).show();
                     getDialog().dismiss();
 
                 }else{
@@ -140,7 +140,7 @@ public class DisplayQuestionDialog extends DialogFragment {
         button2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (button2.getText()==step.getGoodAnswer()){
-                    Toast.makeText(v.getContext(), "BRAVO!", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(v.getContext(), "BRAVO!", Toast.LENGTH_SHORT).show();
                     getDialog().dismiss();
                 }else{
                     Toast.makeText(v.getContext(), "Wrong Answer!", Toast.LENGTH_SHORT).show();
@@ -150,7 +150,7 @@ public class DisplayQuestionDialog extends DialogFragment {
         button3.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (button3.getText()==step.getGoodAnswer()){
-                    Toast.makeText(v.getContext(), "BRAVO!", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(v.getContext(), "BRAVO!", Toast.LENGTH_SHORT).show();
                     getDialog().dismiss();
                 }else{
                     Toast.makeText(v.getContext(), "Wrong Answer!", Toast.LENGTH_SHORT).show();
@@ -160,7 +160,7 @@ public class DisplayQuestionDialog extends DialogFragment {
         button4.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (button4.getText()==step.getGoodAnswer()){
-                    Toast.makeText(v.getContext(), "BRAVO!", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(v.getContext(), "BRAVO!", Toast.LENGTH_SHORT).show();
                     getDialog().dismiss();
                 }else{
                     Toast.makeText(v.getContext(), "Wrong Answer!", Toast.LENGTH_SHORT).show();

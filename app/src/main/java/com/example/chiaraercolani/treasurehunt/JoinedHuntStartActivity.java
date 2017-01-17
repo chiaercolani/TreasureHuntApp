@@ -9,6 +9,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -21,6 +23,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutCompat;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
@@ -55,6 +59,8 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
     private ArrayList<Step> steps;
     private Step currentStep;
     private DisplayQuestionDialog displayQuestionDialog;
+
+    int detected_distance = 100;
 
     int position = 0;
 
@@ -212,6 +218,7 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
     }
 
     private void updateCameraPosition(){
+
         CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())).zoom(16).build();
 
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
@@ -221,7 +228,11 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
         LatLng latLng = new LatLng(step.getLatitude(),step.getLongitude());
         MarkerOptions options = new MarkerOptions().position(latLng);
         options.title(step.getName());
-        options.icon(BitmapDescriptorFactory.defaultMarker());
+        if(position == steps.size()-1){
+            options.icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("end_marker",100,100)) );
+        }else {
+            options.icon(BitmapDescriptorFactory.defaultMarker());
+        }
         options.draggable(false);
         stepMarker = mMap.addMarker(options);
     }
@@ -233,11 +244,16 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
             currentStep = steps.get(position);
             displayStep(currentStep);
         }else{
-            Toast.makeText(getBaseContext(), "END OF THE HUNT", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent();
             intent.setClass(JoinedHuntStartActivity.this, EndOfHuntActivity.class);
             startActivity(intent);
         }
+    }
+
+    public Bitmap resizeMapIcons(String iconName, int width, int height){
+        Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),getResources().getIdentifier(iconName, "drawable", getPackageName()));
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, false);
+        return resizedBitmap;
     }
 
     private void removeStep(){
@@ -257,7 +273,22 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
                             currentLocation.getLongitude(),
                             stepMarker.getPosition().latitude,
                             stepMarker.getPosition().longitude);
-                    if (distanceToStep < 100) {
+                    if (distanceToStep > detected_distance) {
+                        //Toast.makeText(JoinedHuntStartActivity.this, "Still " + ((int)distanceToStep) + " meters to go", Toast.LENGTH_SHORT).show();
+                        //View header = (View)getLayoutInflater().inflate(R.layout., null);
+                        TextView headerValue = (TextView) findViewById(R.id.distance_id);
+                        headerValue.setText( "Still " + ((int)distanceToStep) + " meters to go" );
+
+                        //listView.addHeaderView(header);
+                        //listView.setAdapter(adapter);
+                    } else if(position ==steps.size()-1) {
+                        TextView headerValue = (TextView) findViewById(R.id.distance_id);
+                        headerValue.setText( "You reached the final step!");
+                    } else{
+                        TextView headerValue = (TextView) findViewById(R.id.distance_id);
+                        headerValue.setText( "You reached step "+ (position+1) );
+                    }
+                    if (distanceToStep < detected_distance) {
                         if (displayQuestionDialog == null) {
                             displayQuestionDialog = new DisplayQuestionDialog();
 

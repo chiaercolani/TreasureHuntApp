@@ -24,7 +24,7 @@
     <string name="new_step_dialog_question_hint">question ?</string>
     <string name="new_step_dialog_correct_answer_hint">right Answer</string>
     <string name="new_step_dialog_bad_answers_hint">wrong Answer</string>
-    <string name="end_message">Congratulations,you made it!</string>
+    <string name="end_message">Congratulations, you made it!</string>
     <!-- Strings related to Settings -->
 
     <string name="pref_cat_user">User Settings</string>
