@@ -28,13 +28,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CreateHuntActivity extends AppCompatActivity {
 
     private final static int PICK_STEP_POSITION_ACTIVITY_REQUEST_CODE = 1;
+
     private Hunt onBuildingHunt;
     private DialogFragment newStepDialog;
 
@@ -64,15 +64,27 @@ public class CreateHuntActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        String huntName = getIntent().getStringExtra(OnBuildingHuntActivity.HUNT_NAME_EXTRA);
-        onBuildingHunt = new Hunt(huntName, System.currentTimeMillis());
+        String huntName;
+        if(getIntent().getBooleanExtra(OnBuildingHuntActivity.IS_THIS_HUNT_NEW_EXTRA, true)) {
+            huntName = getIntent().getStringExtra(OnBuildingHuntActivity.NEW_HUNT_NAME_EXTRA);
+            onBuildingHunt = new Hunt(huntName, System.currentTimeMillis());
+            steps = new ArrayList<>();
+        } else {
+            String huntFileName = getIntent().getStringExtra(OnBuildingHuntActivity.HUNT_FILE_PATH_EXTRA);
+            HuntFileReader huntFileReader = new HuntFileReader(huntFileName);
+            huntName = huntFileReader.getHuntName();
+            steps = huntFileReader.getSteps();
+            Toast.makeText(this, huntFileReader.getHuntName(), Toast.LENGTH_SHORT).show();
+            onBuildingHunt = new Hunt(huntName, huntFileReader.getHuntID());
+        }
+
         getSupportActionBar().setTitle(huntName);
 
-        steps = new ArrayList<>();
         stepArrayAdapter = new StepArrayAdapter(this, R.layout.steps_list_item, steps);
         stepsListView = (ListView) findViewById(R.id.steps_list);
         stepsListView.setAdapter(stepArrayAdapter);
         registerForContextMenu(stepsListView);
+        stepArrayAdapter.notifyDataSetChanged();
 
     }
 

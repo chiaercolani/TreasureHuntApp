@@ -14,59 +14,78 @@ public class HuntFileReader {
 
     private FileReader fileReader;
     private ArrayList<Step> steps;
+    private String filePath;
 
-    public HuntFileReader (String fileName){
+
+    public HuntFileReader (String filePath){
 
         try {
-            fileReader = new FileReader(fileName);
+            fileReader = new FileReader(filePath);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         steps = new ArrayList<>();
+        this.filePath = filePath;
     }
 
     public ArrayList<Step> getSteps(){
 
-        // This will reference one line at a time
-        String line = null;
+        if(fileReader!=null) {
+            // This will reference one line at a time
+            String line = null;
 
-        try {
+            try {
 
-            // Always wrap FileReader in BufferedReader.
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
+                // Always wrap FileReader in BufferedReader.
+                BufferedReader bufferedReader = new BufferedReader(fileReader);
 
-            line = bufferedReader.readLine();
-            String[] parts_hunt = line.split("::");
-            Hunt hunt = new Hunt(parts_hunt[0], Long.parseLong(parts_hunt[1]));
+                line = bufferedReader.readLine();
+                String[] parts_hunt = line.split("::");
+                Hunt hunt = new Hunt(parts_hunt[0], Long.parseLong(parts_hunt[1]));
 
-            while ((line = bufferedReader.readLine()) != null) {
-                String[] parts = line.split("::");
-                Step step = null;
-                switch (parts.length) {
-                    case 7:
-                        step = new Step(parts[0], Double.parseDouble(parts[2]), Double.parseDouble(parts[3]), Long.parseLong(parts[1]), parts[4], parts[5], parts[6], "", "");
-                        break;
-                    case 8:
-                        step = new Step(parts[0], Double.parseDouble(parts[2]), Double.parseDouble(parts[3]), Long.parseLong(parts[1]), parts[4], parts[5], parts[6], parts[7], "");
-                        break;
-                    case 9:
-                        step = new Step(parts[0], Double.parseDouble(parts[2]), Double.parseDouble(parts[3]), Long.parseLong(parts[1]), parts[4], parts[5], parts[6], parts[7], parts[8]);
-                        break;
+                while ((line = bufferedReader.readLine()) != null) {
+                    String[] parts = line.split("::");
+                    Step step = null;
+                    switch (parts.length) {
+                        case 7:
+                            step = new Step(parts[0], Double.parseDouble(parts[2]), Double.parseDouble(parts[3]), Long.parseLong(parts[1]), parts[4], parts[5], parts[6], "", "");
+                            break;
+                        case 8:
+                            step = new Step(parts[0], Double.parseDouble(parts[2]), Double.parseDouble(parts[3]), Long.parseLong(parts[1]), parts[4], parts[5], parts[6], parts[7], "");
+                            break;
+                        case 9:
+                            step = new Step(parts[0], Double.parseDouble(parts[2]), Double.parseDouble(parts[3]), Long.parseLong(parts[1]), parts[4], parts[5], parts[6], parts[7], parts[8]);
+                            break;
+                    }
+                    if (null != step) {
+                        steps.add(step);
+                    }
                 }
-                if (null != step) {
-                    steps.add(step);
-                }
+
+                // Always close files.
+                bufferedReader.close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
-            // Always close files.
-            bufferedReader.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
         return steps;
     }
 
+
+    public String getHuntName(){
+        String fileName;
+        fileName = filePath.substring(filePath.lastIndexOf("/")+1);
+        fileName = fileName.substring(0,fileName.indexOf("_"));
+        return fileName;
+    }
+
+    public long getHuntID(){
+        String fileID;
+        fileID = filePath.substring(filePath.lastIndexOf("_")+1);
+        fileID = fileID.substring(0,fileID.indexOf("."));
+        return Long.valueOf(fileID);
+    }
 }
 

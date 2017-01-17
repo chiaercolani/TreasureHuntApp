@@ -37,8 +37,8 @@ public class HuntFileWriter  {
                 root.mkdirs();
             }
             File file = new File(root, filename);
-            FileWriter writer = new FileWriter(file);
-            writer.append(body);
+            FileWriter writer = new FileWriter(file, false);
+            writer.write(body);
             writer.flush();
             writer.close();
             Toast.makeText(context, "Saved", Toast.LENGTH_SHORT).show();
@@ -65,6 +65,5 @@ public class HuntFileWriter  {
         }
         String fileName = huntToSave.getName() + "_" + huntToSave.getID() + EXTENSION;
         writeOnSD(fileName, fileContent);
-        writeOnSD("huntsample.txt", "fqerg");
     }
 }

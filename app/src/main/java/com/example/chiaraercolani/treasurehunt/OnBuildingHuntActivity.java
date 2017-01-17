@@ -4,15 +4,14 @@ package com.example.chiaraercolani.treasurehunt;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.annotation.VisibleForTesting;
+import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,15 +24,17 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 public class OnBuildingHuntActivity extends AppCompatActivity {
 
-    private final static int CREATE_NEW_HUNT_ACTIVITY_REQUEST_CODE = 0;
-    public final static String HUNT_NAME_EXTRA = "huntnameextra";
+    private final static int CREATE_NEW_HUNT_ACTIVITY_REQUEST_CODE = 45;
+    private final static int EDIT_HUNT_ACTIVITY_REQUEST_CODE = 51;
+    public final static String NEW_HUNT_NAME_EXTRA = "huntnameextra";
+    public final static String HUNT_FILE_PATH_EXTRA = "huntfilenameextra";
+    public final static String IS_THIS_HUNT_NEW_EXTRA = "isthishuntnew";
 
     private ArrayList<File> onBuildingHuntsList;
-    private ArrayList onBuildingHuntsFileList;
+    private ArrayList<String> onBuildingHuntsFileList;
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -47,12 +48,16 @@ public class OnBuildingHuntActivity extends AppCompatActivity {
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
         switch (item.getItemId()){
             case R.id.edit_item :
-                //TODO edit item
+                File fileToEdit = onBuildingHuntsList.get(info.position);
+                Intent intent = new Intent(this, CreateHuntActivity.class);
+                intent.putExtra(IS_THIS_HUNT_NEW_EXTRA, false);
+                intent.putExtra(HUNT_FILE_PATH_EXTRA, onBuildingHuntsList.get(info.position).getAbsolutePath());
+                startActivityForResult(intent, EDIT_HUNT_ACTIVITY_REQUEST_CODE);
                 return true;
             case R.id.delete_item:
-                AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
                 //File fileToDelete = (File)((AdapterView)(info.targetView).getParent()).getItemAtPosition(info.position);
                 File fileToDelete = onBuildingHuntsList.get(info.position);
                 if(fileToDelete.delete()){
@@ -119,11 +124,6 @@ public class OnBuildingHuntActivity extends AppCompatActivity {
 
     }
 
-    private void createHunt(String name){
-        Long ID = System.currentTimeMillis(); //TODO replace it by the database key
-        Hunt hunt = new Hunt(name, ID);
-    }
-
     public static class CreateNewHuntDialogFragment extends DialogFragment {
 
         @Override
@@ -142,7 +142,8 @@ public class OnBuildingHuntActivity extends AppCompatActivity {
 
                     if(!huntName.equals("") && !huntName.contains(HuntFileWriter.SEPARATOR)) {
                         Intent intent = new Intent(getActivity(), CreateHuntActivity.class);
-                        intent.putExtra(HUNT_NAME_EXTRA, huntName);
+                        intent.putExtra(NEW_HUNT_NAME_EXTRA, huntName);
+                        intent.putExtra(IS_THIS_HUNT_NEW_EXTRA, true);
                         startActivityForResult(intent, CREATE_NEW_HUNT_ACTIVITY_REQUEST_CODE);
                     } else {
                         Toast.makeText(getActivity(), "Enter a valid name", Toast.LENGTH_SHORT).show();
