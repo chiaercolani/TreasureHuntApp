@@ -99,12 +99,18 @@ public class CreateHuntActivity extends AppCompatActivity {
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
         switch (item.getItemId()){
             case R.id.edit_item :
-                //TODO edit item
+                Step stepToEdit = steps.get(info.position);
+                newStepDialog = new CreateNewStepDialogFragment();
+                newStepDialog.show(getSupportFragmentManager(), "edit step");
+                getSupportFragmentManager().executePendingTransactions();
+                setListeners(newStepDialog.getDialog(), stepToEdit, info.position);
+
+
                 return true;
             case R.id.delete_item:
-                AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
                 steps.remove(info.position);
                 stepArrayAdapter.notifyDataSetChanged();
                 Toast.makeText(this, "Step deleted", Toast.LENGTH_SHORT).show();
@@ -275,7 +281,16 @@ public class CreateHuntActivity extends AppCompatActivity {
         }
     };
 
-    public void setListeners(Dialog dialog){
+    private void setListeners(Dialog dialog){
+        setListeners(dialog, null, 0, true);
+    }
+
+    private void setListeners(Dialog dialog, Step step, int position){
+        setListeners(dialog, step, position, false);
+        fillTexts(step);
+    }
+
+    private void setListeners(Dialog dialog, final Step step, final int position, boolean isThisStepNew){
         nameEditText = (EditText)dialog.findViewById(R.id.new_step_name);
         latitudeEditText = (EditText)dialog.findViewById(R.id.new_step_latitude);
         longitudeEditText = (EditText)dialog.findViewById(R.id.new_step_longitude);
@@ -287,14 +302,24 @@ public class CreateHuntActivity extends AppCompatActivity {
         newStepOkButton = (Button)dialog.findViewById(R.id.new_step_ok_button);
         newStepCancelButton = (Button)dialog.findViewById(R.id.new_step_cancel_button);
 
-        newStepOkButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(createNewStep()){
+        if(isThisStepNew) {
+            newStepOkButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (createNewStep()) {
+                        newStepDialog.dismiss();
+                    }
+                }
+            });
+        } else {
+            newStepOkButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    updateSteps(position, step);
                     newStepDialog.dismiss();
                 }
-            }
-        });
+            });
+        }
         newStepCancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -310,6 +335,31 @@ public class CreateHuntActivity extends AppCompatActivity {
         badAnswer1EditText.addTextChangedListener(editTextListener);
         badAnswer2EditText.addTextChangedListener(editTextListener);
         badAnswer3EditText.addTextChangedListener(editTextListener);
+    }
+
+    private void updateSteps(int position, Step step){
+        step.setName(nameEditText.getText().toString());
+        step.setLatitude(Double.valueOf(latitudeEditText.getText().toString()));
+        step.setLongitude(Double.valueOf(longitudeEditText.getText().toString()));
+        step.setID(System.currentTimeMillis());
+        step.setQuestion(questionEditText.getText().toString());
+        step.setGoodAnswer(goodAnswerEditText.getText().toString());
+        step.setWrongAnswer1(badAnswer1EditText.getText().toString());
+        step.setWrongAnswer2(badAnswer2EditText.getText().toString());
+        step.setWrongAnswer3(badAnswer3EditText.getText().toString());
+        steps.set(position, step);
+        stepArrayAdapter.notifyDataSetChanged();
+    }
+
+    private void fillTexts(Step step){
+        nameEditText.setText(step.getName());
+        latitudeEditText.setText(step.getLatitude().toString());
+        longitudeEditText.setText(step.getLongitude().toString());
+        questionEditText.setText(step.getQuestion());
+        goodAnswerEditText.setText(step.getGoodAnswer());
+        badAnswer1EditText.setText(step.getWrongAnswer1());
+        badAnswer2EditText.setText(step.getWrongAnswer2());
+        badAnswer3EditText.setText(step.getWrongAnswer3());
     }
 
     private class StepArrayAdapter extends ArrayAdapter {
