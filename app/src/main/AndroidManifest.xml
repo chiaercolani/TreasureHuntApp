@@ -17,7 +17,6 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity android:name=".StartMenuActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -56,11 +55,12 @@
                 android:value="com.example.chiaraercolani.treasurehunt.OnBuildingHuntActivity" />
             >
         </activity>
-        <activity android:name=".JoinedHuntStartActivity"
+        <activity
+            android:name=".JoinedHuntStartActivity"
             android:parentActivityName=".JoinHuntActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".JoinHuntActivity"/>
+                android:value=".JoinHuntActivity" />
         </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -72,7 +72,7 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDR0xxTnX3FAtNuFrJDbJTr7XT0E8RuzLo" />
+            android:value="YOUR KEY" />
 
         <activity
             android:name=".PickStepPositionActivity"
@@ -80,12 +80,16 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.chiaraercolani.treasurehunt.CreateHuntActivity" />
-        </activity><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
-     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        </activity>
+        <!--
+ ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
+        -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-        <!--<service android:name=".DisplayQuestionDialog"/> -->
+        <!-- <service android:name=".DisplayQuestionDialog"/> -->
+        <activity android:name=".EndOfHuntActivity"></activity>
     </application>
 
 </manifest>

@@ -212,7 +212,7 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
     }
 
     private void updateCameraPosition(){
-        CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())).zoom(18).build();
+        CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())).zoom(16).build();
 
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
@@ -228,12 +228,15 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
 
     private void displayNextStep(Step step){
         position=position +1;
-        currentStep = steps.get(position);
         removeStep();
         if(position < steps.size()) {
+            currentStep = steps.get(position);
             displayStep(currentStep);
         }else{
             Toast.makeText(getBaseContext(), "END OF THE HUNT", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent();
+            intent.setClass(JoinedHuntStartActivity.this, EndOfHuntActivity.class);
+            startActivity(intent);
         }
     }
 
@@ -247,27 +250,28 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
             if(ContextCompat.checkSelfPermission(JoinedHuntStartActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
                 if (currentLocation != null) {
-                    //updateCameraPosition();
+                    updateCameraPosition();
                 }
+                if (currentLocation!= null && stepMarker != null) {
+                    distanceToStep = meterDistanceBetweenPoints(currentLocation.getLatitude(),
+                            currentLocation.getLongitude(),
+                            stepMarker.getPosition().latitude,
+                            stepMarker.getPosition().longitude);
+                    if (distanceToStep < 100) {
+                        if (displayQuestionDialog == null) {
+                            displayQuestionDialog = new DisplayQuestionDialog();
 
-                distanceToStep = meterDistanceBetweenPoints(currentLocation.getLatitude(),
-                        currentLocation.getLongitude(),
-                        stepMarker.getPosition().latitude,
-                        stepMarker.getPosition().longitude);
-                if(distanceToStep < 100){
-                    if(displayQuestionDialog==null) {
-                        displayQuestionDialog = new DisplayQuestionDialog();
+                        }
+                        if (!displayQuestionDialog.isAdded()) {
+                            displayQuestionDialog.show(getFragmentManager(), "Display question");
+                            getFragmentManager().executePendingTransactions();
+                            displayQuestionDialog.setCancelable(false);
+                            displayQuestionDialog.setStep(currentStep);
+                            displayQuestionDialog.getAnswer(currentStep);
+                            //TODO call displayNextStep when the dialog is dismissed
+                            displayQuestionDialog.DismissListner(closeListener);
 
-                    }
-                    if (!displayQuestionDialog.isAdded()) {
-                        displayQuestionDialog.show(getFragmentManager(), "Display question");
-                        getFragmentManager().executePendingTransactions();
-                        displayQuestionDialog.setCancelable(false);
-                        displayQuestionDialog.setStep(currentStep);
-                        displayQuestionDialog.getAnswer(currentStep);
-                        //TODO call displayNextStep when the dialog is dismissed
-                        displayQuestionDialog.DismissListner(closeListener);
-
+                        }
                     }
                 }
 
@@ -310,8 +314,23 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        //TODO save position
+        new AlertDialog.Builder(this)
+                .setTitle("Are you sure you want to quit?")
+                .setMessage("All your progress will be lost")
+                .setNegativeButton(android.R.string.cancel,  new DialogInterface.OnClickListener() {
+                    @Override public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override public void onClick(DialogInterface dialog, int which) {
+                        JoinedHuntStartActivity.this.finish();
+                    }
+                })
+                .create()
+                .show();
+
+
     }
 
 }

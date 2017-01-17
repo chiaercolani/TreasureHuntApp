@@ -17,6 +17,12 @@ public class StartMenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_start_menu);
     }
 
+    @Override
+    public void onBackPressed(){
+        finish();
+        System.exit(0);
+    }
+
     public void buttonClicked(View view){
         Intent intent;
         switch(view.getId()){

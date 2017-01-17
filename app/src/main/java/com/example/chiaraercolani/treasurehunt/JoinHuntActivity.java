@@ -31,9 +31,17 @@ public class JoinHuntActivity extends AppCompatActivity {
         HuntDirectoryReader huntDirectoryReader = new HuntDirectoryReader(getApplicationContext().getFilesDir());
         files = huntDirectoryReader.getHuntFileList();
 
+        ArrayList FileList = new ArrayList();
+        for (File element : files){
+            String name = element.getName();
+            String delim = "_";
+            String[] parsed = name.split(delim);
+            FileList.add(parsed[0]);
+        }
+
         final ListView listview =(ListView) findViewById(R.id.join_hunt_list);
 
-        final ArrayAdapter adapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1, files);
+        final ArrayAdapter adapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1, FileList);
         listview.setAdapter(adapter);
 
         listview.setOnItemClickListener(JoinHuntItemClickListener);

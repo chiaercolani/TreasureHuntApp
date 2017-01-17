@@ -4,6 +4,7 @@ package com.example.chiaraercolani.treasurehunt;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 public class OnBuildingHuntActivity extends AppCompatActivity {
 
@@ -41,7 +43,15 @@ public class OnBuildingHuntActivity extends AppCompatActivity {
 
         HuntDirectoryReader huntDirectoryReader = new HuntDirectoryReader(getApplicationContext().getFilesDir());
         onBuildingHuntsList = huntDirectoryReader.getHuntFileList();
-        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, onBuildingHuntsList);
+
+        ArrayList onBuildingHuntsFileList = new ArrayList();
+        for (File element : onBuildingHuntsList){
+            String name = element.getName();
+            String delim = "_";
+            String[] parsed = name.split(delim);
+            onBuildingHuntsFileList.add(parsed[0]);
+        }
+        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, onBuildingHuntsFileList);
         ListView listView = (ListView) findViewById(R.id.on_building_hunt_list);
         listView.setAdapter(adapter);
 
