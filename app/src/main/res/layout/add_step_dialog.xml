@@ -4,8 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    style="@style/AppTheme"
-    android:background="@color/Gainsboro">
+    style="@style/DialogStyle">
 
     <TextView
         android:layout_width="match_parent"

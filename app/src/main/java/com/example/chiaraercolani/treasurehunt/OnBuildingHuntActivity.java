@@ -8,15 +8,19 @@ import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -29,7 +33,40 @@ public class OnBuildingHuntActivity extends AppCompatActivity {
     public final static String HUNT_NAME_EXTRA = "huntnameextra";
 
     private ArrayList<File> onBuildingHuntsList;
+    private ArrayList onBuildingHuntsFileList;
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        if(v.getId() == R.id.on_building_hunt_list){
+            getMenuInflater().inflate(R.menu.edit_item_menu, menu);
+            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+            menu.setHeaderTitle(((TextView) info.targetView).getText().toString());
+        }
+        super.onCreateContextMenu(menu, v, menuInfo);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.edit_item :
+                //TODO edit item
+                return true;
+            case R.id.delete_item:
+                AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+                //File fileToDelete = (File)((AdapterView)(info.targetView).getParent()).getItemAtPosition(info.position);
+                File fileToDelete = onBuildingHuntsList.get(info.position);
+                if(fileToDelete.delete()){
+                    Toast.makeText(this, "hunt deleted", Toast.LENGTH_SHORT).show();
+                    onBuildingHuntsList.remove(info.position);
+                    onBuildingHuntsFileList.remove(info.position);
+                    ((ArrayAdapter)((ListView)findViewById(R.id.on_building_hunt_list)).getAdapter()).notifyDataSetChanged();
+                } else {
+                    Toast.makeText(this, "Unable to delete this hunt", Toast.LENGTH_SHORT).show();
+                }
+                return true;
+        }
+        return false;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +81,7 @@ public class OnBuildingHuntActivity extends AppCompatActivity {
         HuntDirectoryReader huntDirectoryReader = new HuntDirectoryReader(getApplicationContext().getFilesDir());
         onBuildingHuntsList = huntDirectoryReader.getHuntFileList();
 
-        ArrayList onBuildingHuntsFileList = new ArrayList();
+        onBuildingHuntsFileList = new ArrayList();
         for (File element : onBuildingHuntsList){
             String name = element.getName();
             String delim = "_";
@@ -52,8 +89,10 @@ public class OnBuildingHuntActivity extends AppCompatActivity {
             onBuildingHuntsFileList.add(parsed[0]);
         }
         ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, onBuildingHuntsFileList);
+        adapter.notifyDataSetChanged();
         ListView listView = (ListView) findViewById(R.id.on_building_hunt_list);
         listView.setAdapter(adapter);
+        registerForContextMenu(listView);
 
     }
 

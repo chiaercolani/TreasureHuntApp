@@ -12,19 +12,23 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,7 +72,33 @@ public class CreateHuntActivity extends AppCompatActivity {
         stepArrayAdapter = new StepArrayAdapter(this, R.layout.steps_list_item, steps);
         stepsListView = (ListView) findViewById(R.id.steps_list);
         stepsListView.setAdapter(stepArrayAdapter);
+        registerForContextMenu(stepsListView);
 
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        if(v.getId() == R.id.steps_list){
+            getMenuInflater().inflate(R.menu.edit_item_menu, menu);
+            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
+        }
+        super.onCreateContextMenu(menu, v, menuInfo);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.edit_item :
+                //TODO edit item
+                return true;
+            case R.id.delete_item:
+                AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+                steps.remove(info.position);
+                stepArrayAdapter.notifyDataSetChanged();
+                Toast.makeText(this, "Step deleted", Toast.LENGTH_SHORT).show();
+                return true;
+        }
+        return false;
     }
 
     @Override
