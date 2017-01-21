@@ -47,7 +47,24 @@
         android:layout_gravity="center"
         android:contentDescription="the treasure picture"/>
 
+    <TextView
+        android:id="@+id/textview_distance_walked"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Distance walked during the hunt: "
+        android:layout_above="@+id/textview_calories_burned"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/textview_calories_burned"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Calories burned during the hunt: "
+        android:layout_above="@+id/back_to_main_menu_button"
+        android:gravity="center"/>
+
     <Button
+        android:layout_margin="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

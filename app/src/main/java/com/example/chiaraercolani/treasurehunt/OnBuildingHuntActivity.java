@@ -116,6 +116,8 @@ public class OnBuildingHuntActivity extends AppCompatActivity {
             case R.id.create_new_hunt :
                 DialogFragment dialogFragment = new CreateNewHuntDialogFragment();
                 dialogFragment.show(getSupportFragmentManager(), "create new hunt");
+
+
                 return true;
 
             default:

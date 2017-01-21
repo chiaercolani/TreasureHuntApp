@@ -51,6 +51,8 @@ import java.util.ArrayList;
 
 public class JoinedHuntStartActivity extends FragmentActivity implements OnMapReadyCallback {
 
+    public static final String DISTANCE_WALKED_EXTRA = "distancewalkedextra";
+
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
     private Location currentLocation;
@@ -59,6 +61,7 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
     private ArrayList<Step> steps;
     private Step currentStep;
     private DisplayQuestionDialog displayQuestionDialog;
+    private double distanceWalked;
 
     int detected_distance = 100;
 
@@ -120,6 +123,8 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_joined_hunt_start);
+
+        distanceWalked = 0;
 
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
@@ -245,6 +250,7 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
             displayStep(currentStep);
         }else{
             Intent intent = new Intent();
+            intent.putExtra(DISTANCE_WALKED_EXTRA, distanceWalked);
             intent.setClass(JoinedHuntStartActivity.this, EndOfHuntActivity.class);
             startActivity(intent);
         }
@@ -264,9 +270,14 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
         @Override
         public void onLocationChanged(Location location){
             if(ContextCompat.checkSelfPermission(JoinedHuntStartActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                Location previousLocation = currentLocation;
                 currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-                if (currentLocation != null) {
+                if (currentLocation != null && previousLocation!=null) {
                     //updateCameraPosition();
+                    distanceWalked += meterDistanceBetweenPoints(previousLocation.getLatitude(),
+                            previousLocation.getLongitude(),
+                            currentLocation.getLatitude(),
+                            currentLocation.getLongitude());
                 }
                 if (currentLocation!= null && stepMarker != null) {
                     distanceToStep = meterDistanceBetweenPoints(currentLocation.getLatitude(),
