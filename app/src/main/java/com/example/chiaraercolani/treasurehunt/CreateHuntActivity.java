@@ -66,10 +66,12 @@ public class CreateHuntActivity extends AppCompatActivity {
 
         String huntName;
         if(getIntent().getBooleanExtra(OnBuildingHuntActivity.IS_THIS_HUNT_NEW_EXTRA, true)) {
+            //new hunt, no steps are yet created
             huntName = getIntent().getStringExtra(OnBuildingHuntActivity.NEW_HUNT_NAME_EXTRA);
             onBuildingHunt = new Hunt(huntName, System.currentTimeMillis());
             steps = new ArrayList<>();
         } else {
+            //display already existing steps
             String huntFileName = getIntent().getStringExtra(OnBuildingHuntActivity.HUNT_FILE_PATH_EXTRA);
             HuntFileReader huntFileReader = new HuntFileReader(huntFileName);
             huntName = huntFileReader.getHuntName();
@@ -88,6 +90,7 @@ public class CreateHuntActivity extends AppCompatActivity {
 
     }
 
+    // allow to edit steps (when long click)
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         if(v.getId() == R.id.steps_list){

@@ -50,7 +50,7 @@ public class DisplayQuestionDialog extends DialogFragment {
 
 
     /**
-     * Associate each answer to a button and set the text inside the button according to what
+     * Associate each answer to a button and set the text inside the button accordingly.
      * @param step
      */
     public void setStep(Step step){
@@ -134,6 +134,10 @@ public class DisplayQuestionDialog extends DialogFragment {
 
     }
 
+    /**
+     * Dismiss the question dialog when only when the correct answer is chosen
+     * @param step
+     */
     public void getAnswer (final Step step){
         button1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
