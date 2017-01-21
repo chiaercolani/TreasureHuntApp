@@ -23,7 +23,7 @@
             android:persistent="true"
             android:dialogTitle="Weight"
             android:dialogMessage="enter your weight (kg)"
-            android:defaultValue="0"
+            android:defaultValue=""
             android:inputType="number"
             android:id="@+id/user_weight"
             />

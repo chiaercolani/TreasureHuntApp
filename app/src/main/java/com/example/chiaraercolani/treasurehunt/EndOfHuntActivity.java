@@ -17,7 +17,7 @@ public class EndOfHuntActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_end_of_hunt);
 
-        weight = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(this).getString("pref_user_weight",null));
+        weight = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(this).getString("pref_user_weight",""));
 
         Button backToMainMenuButton = (Button) findViewById(R.id.back_to_main_menu_button);
         backToMainMenuButton.setOnClickListener(new View.OnClickListener() {
@@ -35,8 +35,9 @@ public class EndOfHuntActivity extends AppCompatActivity {
             tvDistanceWalked.setVisibility(View.INVISIBLE);
             tvCaloriesBurned.setVisibility(View.INVISIBLE);
         } else {
-            double caloriesBurned = 3.4937*weight*(distanceWalked/4); //calories=(0.0215xspeed^3-0.1765xspeed^2+0.8710xspeed+1.4577)xweightx(distance/speed) speed=4kph
-            tvDistanceWalked.setText(tvDistanceWalked.getText() + String.valueOf((int)distanceWalked));
+            double caloriesBurned = 3.4937*weight*(distanceWalked/4000); //calories=(0.0215xspeed^3 - 0.1765xspeed^2 + 0.8710xspeed + 1.4577)xweightx(distance/speed) speed=4kph
+
+            tvDistanceWalked.setText(tvDistanceWalked.getText() + String.valueOf((int)distanceWalked + " meters"));
             tvCaloriesBurned.setText(tvCaloriesBurned.getText() + String.valueOf((int)caloriesBurned));
         }
 
