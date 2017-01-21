@@ -10,14 +10,18 @@ import android.widget.TextView;
 
 public class EndOfHuntActivity extends AppCompatActivity {
 
-    private int weight = 0;
+    private int weight = 62;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_end_of_hunt);
 
-        weight = Integer.valueOf(PreferenceManager.getDefaultSharedPreferences(this).getString("pref_user_weight",""));
+        String weightString = PreferenceManager.getDefaultSharedPreferences(this).getString("pref_user_weight","");
+        if(weightString.matches("\\d+(?:\\.\\d+)?"))
+        {
+            weight = Integer.valueOf(weightString);
+        }
 
         Button backToMainMenuButton = (Button) findViewById(R.id.back_to_main_menu_button);
         backToMainMenuButton.setOnClickListener(new View.OnClickListener() {

@@ -1,9 +1,9 @@
 package com.example.chiaraercolani.treasurehunt;
 
 /**
- * Created by Vincent RICHAUD on 08/11/2016.
+ * Object representing a step of a hunt
+ * Contains all the info about this step
  */
-
 public class Step {
 
     private String name;
