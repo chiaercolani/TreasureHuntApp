@@ -60,13 +60,19 @@ public class DisplayQuestionDialog extends DialogFragment {
         button2.setEnabled(true);
         button3.setEnabled(true);
         button4.setEnabled(true);
+        button1.setVisibility(View.VISIBLE);
+        button2.setVisibility(View.VISIBLE);
+        button3.setVisibility(View.VISIBLE);
+        button4.setVisibility(View.VISIBLE);
 
         Random random = new Random(System.currentTimeMillis());
 
         if (step.getWrongAnswer3().isEmpty()) {
             if(step.getWrongAnswer2().isEmpty()){
                 button4.setEnabled(false);
+                button4.setVisibility(View.INVISIBLE);
                 button3.setEnabled(false);
+                button3.setVisibility(View.INVISIBLE);
                 if (random.nextInt(2) == 0) {
                     button1.setText(step.getGoodAnswer());
                     button2.setText(step.getWrongAnswer1());
@@ -76,6 +82,7 @@ public class DisplayQuestionDialog extends DialogFragment {
                 }
             }else {
                 button4.setEnabled(false);
+                button4.setVisibility(View.INVISIBLE);
                 switch (random.nextInt(3)) {
                     case  0:
                         button1.setText(step.getGoodAnswer());
