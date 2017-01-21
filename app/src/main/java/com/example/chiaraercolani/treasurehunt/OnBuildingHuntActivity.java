@@ -81,7 +81,7 @@ public class OnBuildingHuntActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.on_building_hunt_activity_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("On building hunts"); //TODO put a nice title
+        getSupportActionBar().setTitle("Stored hunts"); //TODO put a nice title
 
         HuntDirectoryReader huntDirectoryReader = new HuntDirectoryReader(getApplicationContext().getFilesDir());
         onBuildingHuntsList = huntDirectoryReader.getHuntFileList();

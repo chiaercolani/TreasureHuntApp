@@ -83,7 +83,7 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
 
     public interface MyDialogCloseListener
     {
-        public void handleDialogClose(DialogInterface dialog);
+        void handleDialogClose(DialogInterface dialog);
     }
 
     MyDialogCloseListener closeListener   = new MyDialogCloseListener() {
@@ -124,7 +124,7 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
         //dialog to prompt user to enable the GPS provider
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) &&
                 !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
             // Build the alert dialog
             AlertDialog.Builder builder = new AlertDialog.Builder(this);

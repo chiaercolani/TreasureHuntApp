@@ -2,8 +2,11 @@ package com.example.chiaraercolani.treasurehunt;
 
 import android.*;
 import android.Manifest;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Camera;
@@ -97,6 +100,25 @@ public class PickStepPositionActivity extends FragmentActivity implements OnMapR
         setResult(RESULT_CODE_CANCELED);
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        //dialog to prompt user to enable the GPS provider
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) &&
+                !locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            // Build the alert dialog
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Location Services Not Active");
+            builder.setMessage("Please enable Location Services and GPS");
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    // Show location settings when the user acknowledges the alert dialog
+                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    startActivity(intent);
+                }
+            });
+            Dialog alertDialog = builder.create();
+            alertDialog.setCanceledOnTouchOutside(false);
+            alertDialog.show();
+        }
 
         // Create an instance of GoogleAPIClient.
         if (mGoogleApiClient == null) {
