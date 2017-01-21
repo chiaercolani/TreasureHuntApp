@@ -49,31 +49,26 @@ public class DisplayQuestionDialog extends DialogFragment {
     }
 
 
+    /**
+     * Associate each answer to a button and set the text inside the button according to what
+     * @param step
+     */
     public void setStep(Step step){
         textView.setText(step.getQuestion());
 
         button1 = (Button)view.findViewById(R.id.question_dialog_button_1);
         button2 = (Button)view.findViewById(R.id.question_dialog_button_2);
-//        button3 = (Button)view.findViewById(R.id.question_dialog_button_3);
-//        button4 = (Button)view.findViewById(R.id.question_dialog_button_4);
 
         button1.setEnabled(true);
         button2.setEnabled(true);
-//        button3.setEnabled(true);
-//        button4.setEnabled(true);
         button1.setVisibility(View.VISIBLE);
         button2.setVisibility(View.VISIBLE);
-//        button3.setVisibility(View.VISIBLE);
-//        button4.setVisibility(View.VISIBLE);
 
+        //use random number to mix the order of the possible answers
         Random random = new Random(System.currentTimeMillis());
 
         if (step.getWrongAnswer3().isEmpty()) {
             if(step.getWrongAnswer2().isEmpty()){
-//                button4.setEnabled(false);
-//                button4.setVisibility(View.INVISIBLE);
-//                button3.setEnabled(false);
-//                button3.setVisibility(View.INVISIBLE);
                 if (random.nextInt(2) == 0) {
                     button1.setText(step.getGoodAnswer());
                     button2.setText(step.getWrongAnswer1());
@@ -82,8 +77,6 @@ public class DisplayQuestionDialog extends DialogFragment {
                     button1.setText(step.getWrongAnswer1());
                 }
             }else {
-//                button4.setEnabled(false);
-//                button4.setVisibility(View.INVISIBLE);
                 button3 = new Button(getActivity());
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 view.addView(button3, lp);
@@ -145,7 +138,6 @@ public class DisplayQuestionDialog extends DialogFragment {
         button1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (button1.getText()==step.getGoodAnswer()){
-                    //Toast.makeText(v.getContext(), "BRAVO!", Toast.LENGTH_SHORT).show();
                     getDialog().dismiss();
 
                 }else{
@@ -156,7 +148,6 @@ public class DisplayQuestionDialog extends DialogFragment {
         button2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (button2.getText()==step.getGoodAnswer()){
-                    //Toast.makeText(v.getContext(), "BRAVO!", Toast.LENGTH_SHORT).show();
                     getDialog().dismiss();
                 }else{
                     Toast.makeText(v.getContext(), "Wrong Answer!", Toast.LENGTH_SHORT).show();
@@ -167,7 +158,6 @@ public class DisplayQuestionDialog extends DialogFragment {
             button3.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     if (button3.getText() == step.getGoodAnswer()) {
-                        //Toast.makeText(v.getContext(), "BRAVO!", Toast.LENGTH_SHORT).show();
                         getDialog().dismiss();
                     } else {
                         Toast.makeText(v.getContext(), "Wrong Answer!", Toast.LENGTH_SHORT).show();
@@ -179,7 +169,6 @@ public class DisplayQuestionDialog extends DialogFragment {
             button4.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     if (button4.getText() == step.getGoodAnswer()) {
-                        //Toast.makeText(v.getContext(), "BRAVO!", Toast.LENGTH_SHORT).show();
                         getDialog().dismiss();
                     } else {
                         Toast.makeText(v.getContext(), "Wrong Answer!", Toast.LENGTH_SHORT).show();

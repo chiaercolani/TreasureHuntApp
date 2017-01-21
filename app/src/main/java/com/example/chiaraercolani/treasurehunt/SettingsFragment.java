@@ -15,6 +15,7 @@ import android.widget.EditText;
 public class SettingsFragment extends PreferenceFragment {
 
 
+    //add preferences stored in the "preferences" file
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,16 +24,4 @@ public class SettingsFragment extends PreferenceFragment {
     }
 
 
-
-//    @SuppressWarnings("deprecation")
-//    @Override
-//    public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference)
-//    {
-//        super.onPreferenceTreeClick(preferenceScreen, preference);
-//        if (preference!=null)
-//            if (preference instanceof PreferenceScreen)
-//                if (((PreferenceScreen)preference).getDialog()!=null)
-//                    ((PreferenceScreen)preference).getDialog().getWindow().getDecorView().setBackgroundDrawable(this.getWindow().getDecorView().getBackground().getConstantState().newDrawable());
-//        return false;
-//    }
 }
