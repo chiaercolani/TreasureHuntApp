@@ -266,7 +266,7 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
             if(ContextCompat.checkSelfPermission(JoinedHuntStartActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
                 if (currentLocation != null) {
-                    updateCameraPosition();
+                    //updateCameraPosition();
                 }
                 if (currentLocation!= null && stepMarker != null) {
                     distanceToStep = meterDistanceBetweenPoints(currentLocation.getLatitude(),
