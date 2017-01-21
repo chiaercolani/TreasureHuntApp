@@ -41,9 +41,7 @@ public class Step {
         return latitude;
     }
 
-    public void setLatitude(Double latitude) {
-        this.latitude = latitude;
-    }
+    public void setLatitude(Double latitude) {this.latitude = latitude;}
 
     public long getID() {
         return ID;
