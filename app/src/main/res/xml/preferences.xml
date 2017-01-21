@@ -14,21 +14,10 @@
             android:dialogTitle="@string/pref_username_dialogtitle"
             android:dialogMessage="@string/pref_username_dialogmessage"
             android:defaultValue=""
+            android:id="@+id/username"
             />
 
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:title="@string/pref_cat_app"
-        android:key="pref_cat_app">
-
-        <CheckBoxPreference
-            android:key="pref_push_notifications"
-            android:title="@string/pref_notification_title"
-            android:summary="@string/pref_notification_summary"
-            android:defaultValue="true"
-            />
-
-    </PreferenceCategory>
 
 </PreferenceScreen>
