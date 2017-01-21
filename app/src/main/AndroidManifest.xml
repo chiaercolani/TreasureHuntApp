@@ -72,7 +72,7 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDR0xxTnX3FAtNuFrJDbJTr7XT0E8RuzLo" />
+            android:value="AIzaSyDQPuI92P8oTzXW9tKXsEyppBt2MyYDrq4" />
 
         <activity
             android:name=".PickStepPositionActivity"
@@ -81,6 +81,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.chiaraercolani.treasurehunt.CreateHuntActivity" />
         </activity>
+
+        <activity android:name=".EndOfHuntActivity">
+        </activity>
+
+
         <!--
  ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -89,7 +94,7 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
         <!-- <service android:name=".DisplayQuestionDialog"/> -->
-        <activity android:name=".EndOfHuntActivity"></activity>
+
     </application>
 
 </manifest>

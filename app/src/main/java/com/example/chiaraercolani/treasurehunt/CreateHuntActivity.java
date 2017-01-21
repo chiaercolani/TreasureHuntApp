@@ -161,8 +161,6 @@ public class CreateHuntActivity extends AppCompatActivity {
                     latitude = 0d;
                     longitude = 0d;
                 }
-                System.out.println(String.valueOf(latitude));
-                System.out.println(longitude);
                 latitudeEditText.setText(Double.toString(latitude));
                 longitudeEditText.setText(String.valueOf(longitude));
 
