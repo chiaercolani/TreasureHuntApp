@@ -25,7 +25,7 @@ public class StartMenuActivity extends AppCompatActivity {
 
         TextView WelcomeMsg = (TextView) findViewById(R.id.welcome_msg_id);
 
-        if (InputUser != null || InputUser.isEmpty()){
+        if (InputUser != null && !InputUser.isEmpty()){
             WelcomeMsg.setText("Welcome "+ InputUser+ "!");
         }else{
             WelcomeMsg.setText("Welcome to Treasure Hunt!");

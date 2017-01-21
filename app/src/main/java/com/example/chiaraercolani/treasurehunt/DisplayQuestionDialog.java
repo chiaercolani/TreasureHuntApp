@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +24,7 @@ import java.util.Random;
 public class DisplayQuestionDialog extends DialogFragment {
 
     TextView textView;
-    View view;
+    LinearLayout view;
 
     AlertDialog.Builder builder;
 
@@ -39,7 +40,7 @@ public class DisplayQuestionDialog extends DialogFragment {
         builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
-        view =inflater.inflate(R.layout.question_dialog, null);
+        view = (LinearLayout) inflater.inflate(R.layout.question_dialog, null);
         builder.setView(view);
 
         textView = (TextView)view.findViewById(R.id.question_asked);
@@ -53,26 +54,26 @@ public class DisplayQuestionDialog extends DialogFragment {
 
         button1 = (Button)view.findViewById(R.id.question_dialog_button_1);
         button2 = (Button)view.findViewById(R.id.question_dialog_button_2);
-        button3 = (Button)view.findViewById(R.id.question_dialog_button_3);
-        button4 = (Button)view.findViewById(R.id.question_dialog_button_4);
+//        button3 = (Button)view.findViewById(R.id.question_dialog_button_3);
+//        button4 = (Button)view.findViewById(R.id.question_dialog_button_4);
 
         button1.setEnabled(true);
         button2.setEnabled(true);
-        button3.setEnabled(true);
-        button4.setEnabled(true);
+//        button3.setEnabled(true);
+//        button4.setEnabled(true);
         button1.setVisibility(View.VISIBLE);
         button2.setVisibility(View.VISIBLE);
-        button3.setVisibility(View.VISIBLE);
-        button4.setVisibility(View.VISIBLE);
+//        button3.setVisibility(View.VISIBLE);
+//        button4.setVisibility(View.VISIBLE);
 
         Random random = new Random(System.currentTimeMillis());
 
         if (step.getWrongAnswer3().isEmpty()) {
             if(step.getWrongAnswer2().isEmpty()){
-                button4.setEnabled(false);
-                button4.setVisibility(View.INVISIBLE);
-                button3.setEnabled(false);
-                button3.setVisibility(View.INVISIBLE);
+//                button4.setEnabled(false);
+//                button4.setVisibility(View.INVISIBLE);
+//                button3.setEnabled(false);
+//                button3.setVisibility(View.INVISIBLE);
                 if (random.nextInt(2) == 0) {
                     button1.setText(step.getGoodAnswer());
                     button2.setText(step.getWrongAnswer1());
@@ -81,8 +82,11 @@ public class DisplayQuestionDialog extends DialogFragment {
                     button1.setText(step.getWrongAnswer1());
                 }
             }else {
-                button4.setEnabled(false);
-                button4.setVisibility(View.INVISIBLE);
+//                button4.setEnabled(false);
+//                button4.setVisibility(View.INVISIBLE);
+                button3 = new Button(getActivity());
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                view.addView(button3, lp);
                 switch (random.nextInt(3)) {
                     case  0:
                         button1.setText(step.getGoodAnswer());
@@ -102,6 +106,11 @@ public class DisplayQuestionDialog extends DialogFragment {
                 }
             }
         }else{
+            button3 = new Button(getActivity());
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            view.addView(button3, lp);
+            button4 = new Button(getActivity());
+            view.addView(button4, lp);
             switch (random.nextInt(4)) {
                 case  0:
                     button1.setText(step.getGoodAnswer());
@@ -154,26 +163,30 @@ public class DisplayQuestionDialog extends DialogFragment {
                 }
             }
         });
-        button3.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (button3.getText()==step.getGoodAnswer()){
-                    //Toast.makeText(v.getContext(), "BRAVO!", Toast.LENGTH_SHORT).show();
-                    getDialog().dismiss();
-                }else{
-                    Toast.makeText(v.getContext(), "Wrong Answer!", Toast.LENGTH_SHORT).show();
+        if(button3!=null) {
+            button3.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    if (button3.getText() == step.getGoodAnswer()) {
+                        //Toast.makeText(v.getContext(), "BRAVO!", Toast.LENGTH_SHORT).show();
+                        getDialog().dismiss();
+                    } else {
+                        Toast.makeText(v.getContext(), "Wrong Answer!", Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
-        });
-        button4.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (button4.getText()==step.getGoodAnswer()){
-                    //Toast.makeText(v.getContext(), "BRAVO!", Toast.LENGTH_SHORT).show();
-                    getDialog().dismiss();
-                }else{
-                    Toast.makeText(v.getContext(), "Wrong Answer!", Toast.LENGTH_SHORT).show();
+            });
+        }
+        if(button4!=null) {
+            button4.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    if (button4.getText() == step.getGoodAnswer()) {
+                        //Toast.makeText(v.getContext(), "BRAVO!", Toast.LENGTH_SHORT).show();
+                        getDialog().dismiss();
+                    } else {
+                        Toast.makeText(v.getContext(), "Wrong Answer!", Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     public void DismissListner(JoinedHuntStartActivity.MyDialogCloseListener closeListener){
