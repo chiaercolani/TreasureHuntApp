@@ -8,7 +8,7 @@ public class Step {
 
     private String name;
     private Double longitude;
-    private Double Latitude;
+    private Double latitude;
     private long ID;
     private String question;
     private String goodAnswer;
@@ -17,10 +17,10 @@ public class Step {
     private String wrongAnswer3;
 
 
-    public Step(String name, Double longitude, Double latitude, long id, String question, String goodAnswer, String wrongAnswer1, String wrongAnswer2, String wrongAnswer3) {
+    public Step(String name, Double latitude, Double longitude, long id, String question, String goodAnswer, String wrongAnswer1, String wrongAnswer2, String wrongAnswer3) {
         this.name = name;
         this.longitude = longitude;
-        Latitude = latitude;
+        this.latitude = latitude;
         ID = id;
         this.question = question;
         this.goodAnswer = goodAnswer;
@@ -38,12 +38,10 @@ public class Step {
     }
 
     public Double getLatitude() {
-        return Latitude;
+        return latitude;
     }
 
-    public void setLatitude(Double latitude) {
-        Latitude = latitude;
-    }
+    public void setLatitude(Double latitude) {this.latitude = latitude;}
 
     public long getID() {
         return ID;
