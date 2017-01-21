@@ -25,6 +25,7 @@ public class StartMenuActivity extends AppCompatActivity {
 
         TextView WelcomeMsg = (TextView) findViewById(R.id.welcome_msg_id);
 
+        //use username to personalize main activity
         if (InputUser != null && !InputUser.isEmpty()){
             WelcomeMsg.setText("Welcome "+ InputUser+ "!");
         }else{
@@ -35,12 +36,14 @@ public class StartMenuActivity extends AppCompatActivity {
 
     }
 
+    //close app
     @Override
     public void onBackPressed(){
         finish();
         System.exit(0);
     }
 
+    // open activities according to which putton has been pressed
     public void buttonClicked(View view){
         Intent intent;
         switch(view.getId()){

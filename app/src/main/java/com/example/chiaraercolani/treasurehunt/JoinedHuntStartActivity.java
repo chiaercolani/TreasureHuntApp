@@ -63,7 +63,7 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
     private DisplayQuestionDialog displayQuestionDialog;
     private double distanceWalked;
 
-    int detected_distance = 100;
+    int detected_distance = 30; //if distance to step < detected_distance -> display question
 
     int position = 0;
 
@@ -169,7 +169,7 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
         mapFragment.getMapAsync(this);
         Intent intent = getIntent();
         HuntFileReader huntFileReader = new HuntFileReader(intent.getStringExtra("filename"));
-        steps = huntFileReader.getSteps();
+        steps = huntFileReader.getSteps();  //get the steps of the selected hunt
     }
 
     protected void onStart() {
@@ -202,6 +202,7 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
 
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
 
+            //map settings
             mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             mMap.setMyLocationEnabled(true);
             mMap.getUiSettings().setZoomControlsEnabled(false);
@@ -212,8 +213,8 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
 
         }
 
+        //display first step (if available)
         if(steps.size()>0) {
-
             currentStep = steps.get(0);
             displayStep(currentStep);
         } else {
@@ -222,6 +223,9 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
 
     }
 
+    /**
+     * update camera position around current location and with a certain zoom
+     */
     private void updateCameraPosition(){
 
         CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude())).zoom(16).build();
@@ -229,11 +233,16 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
         mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 
+    /**
+     * display the step
+     * @param step
+     */
     private void displayStep(Step step){
         LatLng latLng = new LatLng(step.getLatitude(),step.getLongitude());
         MarkerOptions options = new MarkerOptions().position(latLng);
         options.title(step.getName());
         if(position == steps.size()-1){
+            //special marker for last step
             options.icon(BitmapDescriptorFactory.fromBitmap(resizeMapIcons("end_marker",100,100)) );
         }else {
             options.icon(BitmapDescriptorFactory.defaultMarker());
@@ -242,6 +251,10 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
         stepMarker = mMap.addMarker(options);
     }
 
+    /**
+     * Increment steps to be displayed, move to EndOfHuntActivity when all the steps have been displayed
+     * @param step
+     */
     private void displayNextStep(Step step){
         position=position +1;
         removeStep();
@@ -256,42 +269,54 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
         }
     }
 
+    /**
+     * used to correctly display a marker
+     * @param iconName
+     * @param width
+     * @param height
+     * @return
+     */
+
     public Bitmap resizeMapIcons(String iconName, int width, int height){
         Bitmap imageBitmap = BitmapFactory.decodeResource(getResources(),getResources().getIdentifier(iconName, "drawable", getPackageName()));
         Bitmap resizedBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, false);
         return resizedBitmap;
     }
 
+    /**
+     * clear map from markers
+     */
     private void removeStep(){
         mMap.clear();
     }
 
+    /**
+     * Used to perform actions when the location changes. It computes distance to the step and decides when to display the question
+     */
     private LocationListener locationListener = new LocationListener(){
+
         @Override
         public void onLocationChanged(Location location){
             if(ContextCompat.checkSelfPermission(JoinedHuntStartActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 Location previousLocation = currentLocation;
                 currentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
                 if (currentLocation != null && previousLocation!=null) {
-                    //updateCameraPosition();
                     distanceWalked += meterDistanceBetweenPoints(previousLocation.getLatitude(),
                             previousLocation.getLongitude(),
                             currentLocation.getLatitude(),
                             currentLocation.getLongitude());
                 }
                 if (currentLocation!= null && stepMarker != null) {
+                    //compute distance to displayed step
                     distanceToStep = meterDistanceBetweenPoints(currentLocation.getLatitude(),
                             currentLocation.getLongitude(),
                             stepMarker.getPosition().latitude,
                             stepMarker.getPosition().longitude);
+                    //display different messages on the bar below the map
                     if (distanceToStep > detected_distance) {
-                        //Toast.makeText(JoinedHuntStartActivity.this, "Still " + ((int)distanceToStep) + " meters to go", Toast.LENGTH_SHORT).show();
-                        //View header = (View)getLayoutInflater().inflate(R.layout., null);
                         TextView headerValue = (TextView) findViewById(R.id.distance_id);
                         headerValue.setText( "Still " + ((int)distanceToStep) + " meters to go" );
 
-                        //listView.addHeaderView(header);
-                        //listView.setAdapter(adapter);
                     } else if(position ==steps.size()-1) {
                         TextView headerValue = (TextView) findViewById(R.id.distance_id);
                         headerValue.setText( "You reached the final step!");
@@ -299,6 +324,7 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
                         TextView headerValue = (TextView) findViewById(R.id.distance_id);
                         headerValue.setText( "You reached step "+ (position+1) );
                     }
+                    //if we are close enough, display the question related to the step
                     if (distanceToStep < detected_distance) {
                         if (displayQuestionDialog == null) {
                             displayQuestionDialog = new DisplayQuestionDialog();
@@ -310,7 +336,6 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
                             displayQuestionDialog.setCancelable(false);
                             displayQuestionDialog.setStep(currentStep);
                             displayQuestionDialog.getAnswer(currentStep);
-                            //TODO call displayNextStep when the dialog is dismissed
                             displayQuestionDialog.DismissListner(closeListener);
 
                         }
@@ -336,8 +361,14 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
     };
 
 
-
-
+    /**
+     * Computes distance in meters between to points
+     * @param lat_a
+     * @param lng_a
+     * @param lat_b
+     * @param lng_b
+     * @return
+     */
     private double meterDistanceBetweenPoints(double lat_a, double lng_a, double lat_b, double lng_b) {
         float pk = (float) (180.f/Math.PI);
 
@@ -354,6 +385,9 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
         return 6366000*tt;
     }
 
+    /**
+     *  tell the user that all the progress will be lost if he goes back to the previous activity
+     */
     @Override
     public void onBackPressed() {
         new AlertDialog.Builder(this)

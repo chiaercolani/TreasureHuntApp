@@ -6,6 +6,7 @@ package com.example.chiaraercolani.treasurehunt;
 
 public class Step {
 
+    // list of all attributes of Step
     private String name;
     private Double longitude;
     private Double latitude;
@@ -17,6 +18,18 @@ public class Step {
     private String wrongAnswer3;
 
 
+    /**
+     * Assign attributes to step
+     * @param name
+     * @param latitude
+     * @param longitude
+     * @param id
+     * @param question
+     * @param goodAnswer
+     * @param wrongAnswer1
+     * @param wrongAnswer2
+     * @param wrongAnswer3
+     */
     public Step(String name, Double latitude, Double longitude, long id, String question, String goodAnswer, String wrongAnswer1, String wrongAnswer2, String wrongAnswer3) {
         this.name = name;
         this.longitude = longitude;
