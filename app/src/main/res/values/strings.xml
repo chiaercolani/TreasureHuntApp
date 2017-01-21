@@ -17,7 +17,7 @@
     <string name="new_step_dialog_name">Name: </string>
     <string name="new_step_dialog_question">Question: </string>
     <string name="new_step_dialog_correct_answer">Correct Answer: </string>
-    <string name="new_step_dialog_bad_answers">Bad answers: </string>
+    <string name="new_step_dialog_bad_answers">Wrong answer: </string>
     <string name="new_step_dialog_latitude_hint">latitude</string>
     <string name="new_step_dialog_longitude_hint">longitude</string>
     <string name="new_step_dialog_name_hint">name</string>
