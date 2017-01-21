@@ -126,6 +126,7 @@ public class OnBuildingHuntActivity extends AppCompatActivity {
 
     }
 
+
     public static class CreateNewHuntDialogFragment extends DialogFragment {
 
         @Override
