@@ -17,6 +17,7 @@ import android.location.LocationManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -47,6 +48,7 @@ public class PickStepPositionActivity extends FragmentActivity implements OnMapR
     public static final String EXTRA_LONGITUDE = "longitude";
     public static final int RESULT_CODE_STEP_PICKED = 50;
     public static final int RESULT_CODE_CANCELED = 51;
+    private final static int REQUEST_CODE_PERMISSION_LOCATION = 4864;
 
     private GoogleMap mMap;
     private double currentLatitude=0;
@@ -185,19 +187,39 @@ public class PickStepPositionActivity extends FragmentActivity implements OnMapR
         mMap = googleMap;
 
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-
-            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             mMap.setMyLocationEnabled(true);
-            mMap.getUiSettings().setZoomControlsEnabled(false);
             mMap.getUiSettings().setMyLocationButtonEnabled(true);
-            mMap.getUiSettings().setCompassEnabled(true);
-            mMap.getUiSettings().setRotateGesturesEnabled(true);
-            mMap.getUiSettings().setZoomGesturesEnabled(true);
-            mMap.setOnMapLongClickListener(onMapLongClickListener);
-
-
+        } else {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                mMap.setMyLocationEnabled(false);
+                mMap.getUiSettings().setMyLocationButtonEnabled(false);
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_PERMISSION_LOCATION);
+            }
         }
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        mMap.getUiSettings().setZoomControlsEnabled(false);
+        mMap.getUiSettings().setCompassEnabled(true);
+        mMap.getUiSettings().setRotateGesturesEnabled(true);
+        mMap.getUiSettings().setZoomGesturesEnabled(true);
+        mMap.setOnMapLongClickListener(onMapLongClickListener);
     }
+
+
+    private ActivityCompat.OnRequestPermissionsResultCallback onRequestPermissionsResultCallback = new ActivityCompat.OnRequestPermissionsResultCallback() {
+        @Override
+        public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+            if(requestCode == REQUEST_CODE_PERMISSION_LOCATION){
+                if(ContextCompat.checkSelfPermission(PickStepPositionActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+                    mMap.setMyLocationEnabled(true);
+                    mMap.getUiSettings().setMyLocationButtonEnabled(true);
+                } else {
+                    mMap.setMyLocationEnabled(false);
+                    mMap.getUiSettings().setMyLocationButtonEnabled(false);
+                }
+            }
+        }
+    };
 
     /**
      * update the camera view in map

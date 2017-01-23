@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutCompat;
@@ -52,6 +53,7 @@ import java.util.ArrayList;
 public class JoinedHuntStartActivity extends FragmentActivity implements OnMapReadyCallback {
 
     public static final String DISTANCE_WALKED_EXTRA = "distancewalkedextra";
+    private final static int REQUEST_CODE_PERMISSION_LOCATION = 4685;
 
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
@@ -200,17 +202,21 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
         mMap = googleMap;
 
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-
-            //map settings
-            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             mMap.setMyLocationEnabled(true);
-            mMap.getUiSettings().setZoomControlsEnabled(false);
             mMap.getUiSettings().setMyLocationButtonEnabled(true);
-            mMap.getUiSettings().setCompassEnabled(true);
-            mMap.getUiSettings().setRotateGesturesEnabled(true);
-            mMap.getUiSettings().setZoomGesturesEnabled(true);
-
+        } else {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                mMap.setMyLocationEnabled(false);
+                mMap.getUiSettings().setMyLocationButtonEnabled(false);
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_PERMISSION_LOCATION);
+            }
         }
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        mMap.getUiSettings().setZoomControlsEnabled(false);
+        mMap.getUiSettings().setCompassEnabled(true);
+        mMap.getUiSettings().setRotateGesturesEnabled(true);
+        mMap.getUiSettings().setZoomGesturesEnabled(true);
 
         //display first step (if available)
         if(steps.size()>0) {
@@ -221,6 +227,21 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
         }
 
     }
+
+    private ActivityCompat.OnRequestPermissionsResultCallback onRequestPermissionsResultCallback = new ActivityCompat.OnRequestPermissionsResultCallback() {
+        @Override
+        public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+            if(requestCode == REQUEST_CODE_PERMISSION_LOCATION){
+                if(ContextCompat.checkSelfPermission(JoinedHuntStartActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+                    mMap.setMyLocationEnabled(true);
+                    mMap.getUiSettings().setMyLocationButtonEnabled(true);
+                } else {
+                    mMap.setMyLocationEnabled(false);
+                    mMap.getUiSettings().setMyLocationButtonEnabled(false);
+                }
+            }
+        }
+    };
 
     /**
      * update camera position around current location and with a certain zoom
