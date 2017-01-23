@@ -38,6 +38,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+/**
+ * Activity use to allow the user to pick the position of a step
+ */
 public class PickStepPositionActivity extends FragmentActivity implements OnMapReadyCallback {
 
     public static final String EXTRA_LATITUDE = "latitude";
@@ -196,6 +199,9 @@ public class PickStepPositionActivity extends FragmentActivity implements OnMapR
         }
     }
 
+    /**
+     * update the camera view in map
+     */
     private void updateCameraPosition(){
         CameraPosition cameraPosition = new CameraPosition.Builder().target(new LatLng(currentLatitude, currentLongitude)).zoom(16).build();
 

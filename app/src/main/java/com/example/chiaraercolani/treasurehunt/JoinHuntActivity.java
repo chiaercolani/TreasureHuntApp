@@ -16,6 +16,10 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Activity used to allow the user to select a hunt in order to play it
+ * display the list of the hunt existing
+ */
 public class JoinHuntActivity extends AppCompatActivity {
 
     List<File> files;
@@ -24,10 +28,13 @@ public class JoinHuntActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join_hunt);
+
+        //set the toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.join_hunt_activity_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        //get the list of the existing hunts
         HuntDirectoryReader huntDirectoryReader = new HuntDirectoryReader(getApplicationContext().getFilesDir());
         files = huntDirectoryReader.getHuntFileList();
 
@@ -54,6 +61,7 @@ public class JoinHuntActivity extends AppCompatActivity {
             Intent intent = new Intent();
             intent.setClass(JoinHuntActivity.this, JoinedHuntStartActivity.class);
             intent.putExtra("filename", files.get(position).getAbsolutePath());
+            //start the choosen hunt
             startActivity(intent);
         }
 

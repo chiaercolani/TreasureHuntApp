@@ -3,13 +3,23 @@ package com.example.chiaraercolani.treasurehunt;
 import java.util.ArrayList;
 
 /**
- * Created by Vincent RICHAUD on 08/11/2016.
+ * Object representing a hunt
  */
-
 public class Hunt {
 
+    /**
+     * name of the hunt
+     */
     private String name;
+
+    /**
+     * Id of the hunt
+     */
     private long ID;
+
+    /**
+     * the steps of the hunt
+     */
     private ArrayList<Step> steps;
 
     public Hunt(String name, long id) {

@@ -31,6 +31,12 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Activity thatis used by the user to create or edit a hunt
+ * It display the list of the steps in the hunt and allow user to edit them
+ * Allow user to add/remove steps
+ * Save the hunt when the user quit this activity
+ */
 public class CreateHuntActivity extends AppCompatActivity {
 
     private final static int PICK_STEP_POSITION_ACTIVITY_REQUEST_CODE = 1;
@@ -60,26 +66,30 @@ public class CreateHuntActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_hunt);
 
+        //set the toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.create_hunt_activity_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        //get info from the parent activity
         String huntName;
         if(getIntent().getBooleanExtra(OnBuildingHuntActivity.IS_THIS_HUNT_NEW_EXTRA, true)) {
+            //user is creating a new hunt
             huntName = getIntent().getStringExtra(OnBuildingHuntActivity.NEW_HUNT_NAME_EXTRA);
             onBuildingHunt = new Hunt(huntName, System.currentTimeMillis());
             steps = new ArrayList<>();
         } else {
+            //user is editing an existing hunt
             String huntFileName = getIntent().getStringExtra(OnBuildingHuntActivity.HUNT_FILE_PATH_EXTRA);
             HuntFileReader huntFileReader = new HuntFileReader(huntFileName);
             huntName = huntFileReader.getHuntName();
             steps = huntFileReader.getSteps();
-            Toast.makeText(this, huntFileReader.getHuntName(), Toast.LENGTH_SHORT).show();
             onBuildingHunt = new Hunt(huntName, huntFileReader.getHuntID());
         }
 
         getSupportActionBar().setTitle(huntName);
 
+        //create and display the list of steps
         stepArrayAdapter = new StepArrayAdapter(this, R.layout.steps_list_item, steps);
         stepsListView = (ListView) findViewById(R.id.steps_list);
         stepsListView.setAdapter(stepArrayAdapter);
@@ -92,7 +102,6 @@ public class CreateHuntActivity extends AppCompatActivity {
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         if(v.getId() == R.id.steps_list){
             getMenuInflater().inflate(R.menu.edit_item_menu, menu);
-            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)menuInfo;
         }
         super.onCreateContextMenu(menu, v, menuInfo);
     }
@@ -102,15 +111,15 @@ public class CreateHuntActivity extends AppCompatActivity {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
         switch (item.getItemId()){
             case R.id.edit_item :
+                //user wants to edit a step
                 Step stepToEdit = steps.get(info.position);
                 newStepDialog = new CreateNewStepDialogFragment();
                 newStepDialog.show(getSupportFragmentManager(), "edit step");
                 getSupportFragmentManager().executePendingTransactions();
                 setListeners(newStepDialog.getDialog(), stepToEdit, info.position);
-
-
                 return true;
             case R.id.delete_item:
+                //user wants to delete a step
                 steps.remove(info.position);
                 stepArrayAdapter.notifyDataSetChanged();
                 Toast.makeText(this, "Step deleted", Toast.LENGTH_SHORT).show();
@@ -123,7 +132,6 @@ public class CreateHuntActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.create_hunt_option_menu, menu);
-
         return true;
     }
 
@@ -131,27 +139,28 @@ public class CreateHuntActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
             case R.id.create_new_step :
+                //user wants to create a new step
                 newStepDialog = new CreateNewStepDialogFragment();
                 newStepDialog.show(getSupportFragmentManager(), "create new step");
                 getSupportFragmentManager().executePendingTransactions();
                 setListeners(newStepDialog.getDialog());
                 return true;
             case android.R.id.home :
+                //user wants to go back to parent activity
                 saveCurrentHunt();
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
-
             default:
                 return super.onOptionsItemSelected(item);
         }
-
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode){
             case PICK_STEP_POSITION_ACTIVITY_REQUEST_CODE:
+                //user has pick the position of the step
+                //get the latitude and longitude and set it in the dialog
                 Double latitude = 0d;
                 Double longitude = 0d;
                 if(resultCode == PickStepPositionActivity.RESULT_CODE_STEP_PICKED){
@@ -163,19 +172,23 @@ public class CreateHuntActivity extends AppCompatActivity {
                 }
                 latitudeEditText.setText(Double.toString(latitude));
                 longitudeEditText.setText(String.valueOf(longitude));
-
         }
     }
 
+    /**
+     * Dialog allowing the user to create or edit a step
+     * Show different editText to enter the value needed to define the step
+     */
     public static class CreateNewStepDialogFragment extends DialogFragment {
 
         @NonNull
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            //define the visual aspect of the dialog
             LayoutInflater inflater = getActivity().getLayoutInflater();
-
             View view = inflater.inflate(R.layout.add_step_dialog, null);
+            //When the user click on the pick step button, open a new activity to allow user to pick the step position
             ((ImageButton)view.findViewById(R.id.pick_step_position_button)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -184,13 +197,16 @@ public class CreateHuntActivity extends AppCompatActivity {
 
                 }
             });
-
             builder.setView(view);
             return builder.create();
         }
 
     }
 
+    /**
+     * Create a new step using the values in the editText of the dialog
+     * @return true if the step was correctly created
+     */
     private boolean createNewStep(){
 
         String name = nameEditText.getText().toString();
@@ -210,6 +226,9 @@ public class CreateHuntActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     * TextWatcher used to check what the user write in the dialog's editText
+     */
     private TextWatcher editTextListener = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -271,6 +290,7 @@ public class CreateHuntActivity extends AppCompatActivity {
                     && badAnswer1EditText.getError()==null
                     && badAnswer2EditText.getError()==null
                     && badAnswer3EditText.getError()==null) {
+                //if all user entries are correct allow user to valid this step
                 newStepOkButton.setEnabled(true);
             } else {
                 newStepOkButton.setEnabled(false);
@@ -279,15 +299,34 @@ public class CreateHuntActivity extends AppCompatActivity {
         }
     };
 
+    /**
+     * Define the listeners for the dialog
+     * same as setListeners(dialog, null, 0, true);
+     * @param dialog
+     */
     private void setListeners(Dialog dialog){
         setListeners(dialog, null, 0, true);
     }
 
+    /**
+     * Define the listeners for the dialog
+     * same as setListeners(dialog, step, position, false);
+     * @param dialog
+     * @param step
+     * @param position
+     */
     private void setListeners(Dialog dialog, Step step, int position){
         setListeners(dialog, step, position, false);
         fillTexts(step);
     }
 
+    /**
+     * Define the listeners for the dialog
+     * @param dialog
+     * @param step
+     * @param position
+     * @param isThisStepNew
+     */
     private void setListeners(Dialog dialog, final Step step, final int position, boolean isThisStepNew){
         nameEditText = (EditText)dialog.findViewById(R.id.new_step_name);
         latitudeEditText = (EditText)dialog.findViewById(R.id.new_step_latitude);
@@ -335,6 +374,11 @@ public class CreateHuntActivity extends AppCompatActivity {
         badAnswer3EditText.addTextChangedListener(editTextListener);
     }
 
+    /**
+     * update the values of the step at position in the list
+     * @param position position in the list to update
+     * @param step new values of the step
+     */
     private void updateSteps(int position, Step step){
         step.setName(nameEditText.getText().toString());
         step.setLatitude(Double.valueOf(latitudeEditText.getText().toString()));
@@ -349,6 +393,10 @@ public class CreateHuntActivity extends AppCompatActivity {
         stepArrayAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * fill the editText of the dialog with the current values of the step
+     * @param step
+     */
     private void fillTexts(Step step){
         nameEditText.setText(step.getName());
         latitudeEditText.setText(step.getLatitude().toString());
@@ -360,6 +408,9 @@ public class CreateHuntActivity extends AppCompatActivity {
         badAnswer3EditText.setText(step.getWrongAnswer3());
     }
 
+    /**
+     * object used to display the listof step
+     */
     private class StepArrayAdapter extends ArrayAdapter {
 
         private Context context;
@@ -374,12 +425,13 @@ public class CreateHuntActivity extends AppCompatActivity {
         public View getView(int position, View convertView, @NonNull ViewGroup parent){
             Step step = steps.get(position);
 
+            //define the layout to use to display a step
             View v = convertView;
             if (v==null){
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(LAYOUT_INFLATER_SERVICE);
                 v = inflater.inflate(R.layout.steps_list_item, null);
             }
-
+            //fill the textView to display info aboutthe step
             ((TextView) v.findViewById(R.id.steps_list_item_number)).setText(String.valueOf(position));
             ((TextView) v.findViewById(R.id.steps_list_item_name)).setText(step.getName());
             ((TextView) v.findViewById(R.id.steps_list_item_latitude)).setText(step.getLatitude().toString());
@@ -396,6 +448,9 @@ public class CreateHuntActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
+    /**
+     * Save the current hunt
+     */
     private void saveCurrentHunt(){
         if(!steps.isEmpty()) {
             onBuildingHunt.addSteps(steps);

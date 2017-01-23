@@ -18,9 +18,8 @@ import android.widget.Toast;
 import java.util.Random;
 
 /**
- * Created by chiaraercolani on 21/12/16.
+ * Dialog used to display a question whileplayong a hunt
  */
-
 public class DisplayQuestionDialog extends DialogFragment {
 
     TextView textView;
@@ -69,6 +68,7 @@ public class DisplayQuestionDialog extends DialogFragment {
 
         if (step.getWrongAnswer3().isEmpty()) {
             if(step.getWrongAnswer2().isEmpty()){
+                //only to answers possible
                 if (random.nextInt(2) == 0) {
                     button1.setText(step.getGoodAnswer());
                     button2.setText(step.getWrongAnswer1());
@@ -77,6 +77,7 @@ public class DisplayQuestionDialog extends DialogFragment {
                     button1.setText(step.getWrongAnswer1());
                 }
             }else {
+                //3 answers possible
                 button3 = new Button(getActivity());
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                 view.addView(button3, lp);
@@ -99,6 +100,7 @@ public class DisplayQuestionDialog extends DialogFragment {
                 }
             }
         }else{
+            //4 answerspossible
             button3 = new Button(getActivity());
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
             view.addView(button3, lp);
@@ -134,6 +136,11 @@ public class DisplayQuestionDialog extends DialogFragment {
 
     }
 
+    /**
+     * Define listeners for the user to answer
+     * check i the user answer correctly
+     * @param step
+     */
     public void getAnswer (final Step step){
         button1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

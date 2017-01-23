@@ -7,16 +7,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Created by chiaraercolani on 13/12/16.
+ * Class used to read hunt file
  */
-
 public class HuntFileReader {
 
     private FileReader fileReader;
     private ArrayList<Step> steps;
     private String filePath;
 
-
+    /**
+     *
+     * @param filePath the path to the fileto read
+     */
     public HuntFileReader (String filePath){
 
         try {
@@ -28,6 +30,10 @@ public class HuntFileReader {
         this.filePath = filePath;
     }
 
+    /**
+     * get the steps of the hunt
+     * @return
+     */
     public ArrayList<Step> getSteps(){
 
         if(fileReader!=null) {
@@ -73,7 +79,10 @@ public class HuntFileReader {
         return steps;
     }
 
-
+    /**
+     * get the hunt name
+     * @return
+     */
     public String getHuntName(){
         String fileName;
         fileName = filePath.substring(filePath.lastIndexOf("/")+1);
@@ -81,6 +90,10 @@ public class HuntFileReader {
         return fileName;
     }
 
+    /**
+     * gt the hunt ID
+     * @return
+     */
     public long getHuntID(){
         String fileID;
         fileID = filePath.substring(filePath.lastIndexOf("_")+1);

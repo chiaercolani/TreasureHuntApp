@@ -63,12 +63,7 @@ public class JoinedHuntStartActivity extends FragmentActivity implements OnMapRe
     private DisplayQuestionDialog displayQuestionDialog;
     private double distanceWalked;
 
-<<<<<<< HEAD
-    int detected_distance = 30; //if distance to step < detected_distance -> display question
-=======
     int detected_distance = 30;
->>>>>>> 9987176c9f80409e3a34e590816104b3e27aef98
-
     int position = 0;
 
     /**

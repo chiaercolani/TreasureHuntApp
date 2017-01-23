@@ -8,6 +8,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+/**
+ * Activity used to display the end of a hunt
+ * Display a congrats message and info (distance walked and calories burned)
+ */
 public class EndOfHuntActivity extends AppCompatActivity {
 
     private int weight = 62;
@@ -17,12 +21,14 @@ public class EndOfHuntActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_end_of_hunt);
 
+        //if the user set it, get the user weight (to calculate calories)
         String weightString = PreferenceManager.getDefaultSharedPreferences(this).getString("pref_user_weight","");
         if(weightString.matches("\\d+(?:\\.\\d+)?"))
         {
             weight = Integer.valueOf(weightString);
         }
 
+        //button to go back to the main menu
         Button backToMainMenuButton = (Button) findViewById(R.id.back_to_main_menu_button);
         backToMainMenuButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -31,6 +37,7 @@ public class EndOfHuntActivity extends AppCompatActivity {
             }
         });
 
+        //display the distance walked and the calories burned
         TextView tvDistanceWalked = (TextView) findViewById(R.id.textview_distance_walked);
         TextView tvCaloriesBurned = (TextView) findViewById(R.id.textview_calories_burned);
         Intent intent = getIntent();
@@ -50,6 +57,7 @@ public class EndOfHuntActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        //return to main menu
         Intent intent = new Intent(this, StartMenuActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);

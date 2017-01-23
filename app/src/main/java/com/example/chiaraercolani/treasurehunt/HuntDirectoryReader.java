@@ -4,14 +4,17 @@ import java.io.File;
 import java.util.ArrayList;
 
 /**
- * Created by Vincent RICHAUD on 21/12/2016.
+ * Object used to read the directory where are stored the hunt
  */
-
 public class HuntDirectoryReader {
 
     private ArrayList<File> huntFileList;
     private File huntDirectory;
 
+    /**
+     * create the hunt directory
+     * @param huntDirectoryParent the parent of the hunt directory
+     */
     public HuntDirectoryReader(File huntDirectoryParent){
         huntFileList = new ArrayList<>();
         this.huntDirectory = new File(huntDirectoryParent, HuntFileWriter.DIRECTORY);
@@ -23,7 +26,10 @@ public class HuntDirectoryReader {
         }
     }
 
-
+    /**
+     * get the list af hunt file in the directory
+     * @return
+     */
     public ArrayList<File> getHuntFileList() {
         File[] files = huntDirectory.listFiles();
 

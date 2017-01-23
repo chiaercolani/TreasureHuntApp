@@ -25,6 +25,10 @@ import android.widget.Toast;
 import java.io.File;
 import java.util.ArrayList;
 
+/**
+ * Activity used to show to the userthe existing hunt
+ * Allow user to choose to create a new hunt or to editan existing one
+ */
 public class OnBuildingHuntActivity extends AppCompatActivity {
 
     private final static int CREATE_NEW_HUNT_ACTIVITY_REQUEST_CODE = 45;
@@ -51,6 +55,7 @@ public class OnBuildingHuntActivity extends AppCompatActivity {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
         switch (item.getItemId()){
             case R.id.edit_item :
+                //user wants to edit the hunt
                 File fileToEdit = onBuildingHuntsList.get(info.position);
                 Intent intent = new Intent(this, CreateHuntActivity.class);
                 intent.putExtra(IS_THIS_HUNT_NEW_EXTRA, false);
@@ -58,7 +63,7 @@ public class OnBuildingHuntActivity extends AppCompatActivity {
                 startActivityForResult(intent, EDIT_HUNT_ACTIVITY_REQUEST_CODE);
                 return true;
             case R.id.delete_item:
-                //File fileToDelete = (File)((AdapterView)(info.targetView).getParent()).getItemAtPosition(info.position);
+                //user wants to delete the hunt
                 File fileToDelete = onBuildingHuntsList.get(info.position);
                 if(fileToDelete.delete()){
                     Toast.makeText(this, "hunt deleted", Toast.LENGTH_SHORT).show();
@@ -78,11 +83,13 @@ public class OnBuildingHuntActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_on_building_hunt);
 
+        //set the toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.on_building_hunt_activity_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Stored hunts");
 
+        //get the list of existing hunts
         HuntDirectoryReader huntDirectoryReader = new HuntDirectoryReader(getApplicationContext().getFilesDir());
         onBuildingHuntsList = huntDirectoryReader.getHuntFileList();
 
@@ -98,7 +105,6 @@ public class OnBuildingHuntActivity extends AppCompatActivity {
         ListView listView = (ListView) findViewById(R.id.on_building_hunt_list);
         listView.setAdapter(adapter);
         registerForContextMenu(listView);
-
     }
 
 
@@ -106,7 +112,6 @@ public class OnBuildingHuntActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.on_building_hunt_option_menu, menu);
-
         return true;
     }
 
@@ -114,10 +119,9 @@ public class OnBuildingHuntActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
             case R.id.create_new_hunt :
+                //user wants to create a new hunt
                 DialogFragment dialogFragment = new CreateNewHuntDialogFragment();
                 dialogFragment.show(getSupportFragmentManager(), "create new hunt");
-
-
                 return true;
 
             default:
@@ -126,7 +130,11 @@ public class OnBuildingHuntActivity extends AppCompatActivity {
 
     }
 
-
+    /**
+     * Dialog used to create a new hunt
+     * ask to the user the hunt name
+     * start the CreateHuntActivity
+     */
     public static class CreateNewHuntDialogFragment extends DialogFragment {
 
         @Override

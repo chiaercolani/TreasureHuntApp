@@ -9,9 +9,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Created by Vincent RICHAUD on 06/12/2016.
+ * Class used to write a hunt file
  */
-
 public class HuntFileWriter  {
 
     public final static String SEPARATOR = "::";
@@ -22,7 +21,11 @@ public class HuntFileWriter  {
     private Hunt huntToSave;
     private Context context;
 
-
+    /**
+     * Publi constructor
+     * @param context
+     * @param huntToSave the hunt to save
+     */
     public HuntFileWriter(Context context, Hunt huntToSave) {
         if(huntToSave != null && context!=null) {
             this.huntToSave = huntToSave;
@@ -30,6 +33,11 @@ public class HuntFileWriter  {
         }
     }
 
+    /**
+     * create a file having filename as name and body as body
+     * @param filename the name of the file to create
+     * @param body the body of the file tot create
+     */
     public void writeOnSD(String filename, String body) {
         try {
             File root = new File(context.getFilesDir(), DIRECTORY);
@@ -47,6 +55,10 @@ public class HuntFileWriter  {
         }
     }
 
+    /**
+     * create the name of the file and it's body
+     * write it on the disk
+     */
     public void write(){
         String fileContent = "";
         fileContent += huntToSave.getName() + SEPARATOR + huntToSave.getID() + "\n";

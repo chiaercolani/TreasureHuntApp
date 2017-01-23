@@ -4,6 +4,9 @@ package com.example.chiaraercolani.treasurehunt;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+/**
+ * Class used to display the SettingsFragment
+ */
 public class SettingsActivity extends AppCompatActivity {
 
 

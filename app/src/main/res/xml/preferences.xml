@@ -20,6 +20,7 @@
         <EditTextPreference
             android:key="pref_user_weight"
             android:title="Weight"
+            android:summary="USed to calculate the calories burned durong a hunt"
             android:persistent="true"
             android:dialogTitle="Weight"
             android:dialogMessage="enter your weight (kg)"

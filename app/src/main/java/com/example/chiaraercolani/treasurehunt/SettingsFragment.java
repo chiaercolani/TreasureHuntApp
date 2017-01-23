@@ -9,9 +9,8 @@ import android.support.v7.widget.Toolbar;
 import android.widget.EditText;
 
 /**
- * Created by Vincent RICHAUD on 08/11/2016.
+ * Fragment used to display the settings
  */
-
 public class SettingsFragment extends PreferenceFragment {
 
 
